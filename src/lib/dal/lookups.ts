@@ -56,7 +56,24 @@ export async function fetchInstructors(): Promise<Result<InstructorLookup[]>> {
           label: r.name ?? ([r.firstName, r.lastName].filter(Boolean).join(" ").trim() || "Instructor"),
           slug: r.slug || r._id || r.id || "",
           avatarUrl: r.avatar ?? r.image ?? r.avatarUrl ?? r.profileImage,
-          title: r.title ?? r.jobTitle ?? r.specialty ?? r.headline,
+          title: r.title ?? r.jobTitle ?? r.professionalTitle ?? r.specialty ?? r.headline,
+          // Public-profile fields. Carried through here rather than in a second
+          // fetch so the profile page and the dropdowns share one request.
+          bio: r.bio ?? undefined,
+          specialty: r.specialty ?? undefined,
+          yearsOfExperience:
+            typeof r.yearsOfExperience === "number" ? r.yearsOfExperience : undefined,
+          certificates: Array.isArray(r.certificates)
+            ? r.certificates.filter((c: unknown): c is string => typeof c === "string" && !!c.trim())
+            : undefined,
+          country: r.country ?? undefined,
+          website: r.website ?? undefined,
+          socialLinks: Array.isArray(r.socialLinks)
+            ? r.socialLinks.filter(
+                (s: unknown): s is { key: string; value: string } =>
+                  !!s && typeof (s as { value?: unknown }).value === "string",
+              )
+            : undefined,
         }))
         .filter((i) => i.id),
     );

@@ -3,6 +3,7 @@ import { setRequestLocale } from "next-intl/server";
 import { dal } from "@/lib/dal";
 import { PageHeader } from "@/components/shared/page-header";
 import { SeoManager } from "@/features/marketing-admin/components/seo-manager";
+import { findCannibalisation } from "@/features/marketing-admin/lib/cannibalisation";
 
 export const metadata = { robots: { index: false } };
 
@@ -17,12 +18,33 @@ export default async function SeoManagerPage({
   const { locale } = await params;
   setRequestLocale(locale);
 
-  const [overviewRes, settingsRes, publicPagesRes, redirectsRes, schemasRes] = await Promise.all([
-    dal.seo.fetchOverview(),
-    dal.seo.fetchSettings(),
-    dal.seo.fetchPublicPages(),
-    dal.seo.fetchRedirects(),
-    dal.seo.fetchSchemas(),
+  const [overviewRes, settingsRes, publicPagesRes, redirectsRes, schemasRes, coursesRes, articlesRes] =
+    await Promise.all([
+      dal.seo.fetchOverview(),
+      dal.seo.fetchSettings(),
+      dal.seo.fetchPublicPages(),
+      dal.seo.fetchRedirects(),
+      dal.seo.fetchSchemas(),
+      dal.courses.fetchCourses({ status: "published" }),
+      dal.blog.fetchPublicArticles({ limit: 500 }),
+    ]);
+
+  /*
+   * Cannibalisation is computed here rather than stored: it is a property of the
+   * current set of titles, so any cached verdict would be stale the moment an
+   * editor retitles a post. 58 URLs is a trivial pairwise comparison.
+   */
+  const cannibalIssues = findCannibalisation([
+    ...(coursesRes.ok ? coursesRes.data : []).map((c) => ({
+      url: `/courses/${c.slug}`,
+      kind: "course" as const,
+      title: c.seo?.metaTitleEn || c.titleEn,
+    })),
+    ...(articlesRes.ok ? articlesRes.data.data : []).map((p) => ({
+      url: `/blog/${p.slug}`,
+      kind: "post" as const,
+      title: p.seoTitle || p.title,
+    })),
   ]);
 
   if (!settingsRes.ok) {
@@ -47,6 +69,7 @@ export default async function SeoManagerPage({
         redirects={redirectsRes.ok ? redirectsRes.data : []}
         schemas={schemasRes.ok ? schemasRes.data.data : []}
         schemaSummary={schemasRes.ok ? schemasRes.data.summary : EMPTY_SUMMARY}
+        cannibalIssues={cannibalIssues}
       />
     </div>
   );

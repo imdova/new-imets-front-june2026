@@ -32,7 +32,7 @@ import {
   CareerCtaSection,
   PartnersSection,
 } from "@/features/marketing/components/home-marketing-sections";
-import { SITE_NAME, seoAlternates, socialMeta, metaDescription } from "@/lib/seo";
+import { brandedTitle, metaDescription, seoAlternates, socialMeta } from "@/lib/seo";
 import { resolveSeoMetadata } from "@/lib/public-seo";
 
 export async function generateMetadata({
@@ -42,15 +42,25 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "Marketing" });
-  const title = `${SITE_NAME} — ${t("heroTitle")}`;
-  const description = metaDescription(t("heroSubtitle"));
+  /*
+   * A dedicated SERP title, not the on-page H1.
+   *
+   * The homepage previously titled itself `${SITE_NAME} — ${t("heroTitle")}`,
+   * which the layout template then suffixed with the brand again: 117
+   * characters, brand twice, and not one word a person would search for. A
+   * headline and a title tag have different jobs — the headline persuades
+   * someone already on the page, the title has to win the click first.
+   */
+  const title = t("homeMetaTitle");
+  const description = metaDescription(t("homeMetaDescription"));
   // Admin-managed SEO (settings + "/" page override) spread underneath so it
   // contributes fields the i18n defaults don't set (e.g. a site-wide noindex);
   // best-effort and never overrides the localized title/description below.
   const adminMeta = await resolveSeoMetadata("/").catch(() => ({} as Metadata));
   return {
     ...adminMeta,
-    title,
+    // Already names the school, so it opts out of the layout's brand template.
+    title: brandedTitle(title),
     description,
     alternates: seoAlternates("/", locale),
     ...socialMeta({ title, description, path: "/", locale }),

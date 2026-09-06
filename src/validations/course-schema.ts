@@ -55,6 +55,36 @@ export const courseIntakeSchema = z.object({
  * Verifiable outcome claims. A pass rate may only be published together with the
  * basis it was measured from — enforced here and again on the server.
  */
+/**
+ * The public course page's instructor block. Storage and rendering for this
+ * already existed; there was no way to enter it, which is why every course
+ * shipped with an empty instructor profile and no page named a real expert.
+ *
+ * Nothing is required — a blank profile renders nothing. But a name is required
+ * before any of the supporting claims can be saved: hospitals and certifications
+ * with nobody attached to them are credentials belonging to no one.
+ */
+export const instructorProfileSchema = z
+  .object({
+    name: z.string().trim(),
+    title: z.string().trim(),
+    image: z.string().trim(),
+    bio: z.string().trim(),
+    yearsExperience: z.coerce.number().min(0).max(70),
+    hospitals: z.array(z.string().trim()),
+    certifications: z.array(z.string().trim()),
+    linkedIn: z.string().trim(),
+  })
+  .refine(
+    (p) =>
+      !!p.name ||
+      !(p.title || p.bio || p.yearsExperience > 0 || p.hospitals.length || p.certifications.length || p.linkedIn),
+    {
+      message: "Add the instructor's name before entering their credentials.",
+      path: ["name"],
+    },
+  );
+
 export const courseProofSchema = z
   .object({
     passRate: z.coerce.number().min(0).max(100),
@@ -236,6 +266,7 @@ export const courseFormSchema = z.object({
   intakes: z.array(courseIntakeSchema),
   /** Verifiable outcome claims. */
   proof: courseProofSchema,
+  instructorProfile: instructorProfileSchema,
 
   /* --- Step 2: Structure --- */
   whatYouWillLearnEn: z.array(z.string().trim()),

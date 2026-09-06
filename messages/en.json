@@ -560,7 +560,24 @@
     "suppressBrandSuffix": "Drop the brand suffix from the meta title",
     "suppressBrandSuffixHint": "The site appends “· IMETS Medical School”. Turn on to use the full title budget for keywords.",
     "titleTooLong": "Too long — search engines will truncate this.",
-    "withSuffix": "with brand suffix"
+    "withSuffix": "with brand suffix",
+    "secInstructor": "Instructor Profile",
+    "secInstructorDesc": "Who teaches this programme. Shown on the public course page and published as Person structured data.",
+    "instructorIntegrityHint": "Everything here is published as a factual claim about a real person. Enter only credentials they actually hold — leave a field blank rather than approximating it.",
+    "instructorName": "Full name",
+    "instructorNamePlaceholder": "Dr. Sara Ahmed",
+    "instructorNameRequired": "Add the instructor's name before entering their credentials.",
+    "instructorTitle": "Professional title",
+    "instructorTitlePlaceholder": "Director of Quality, Cairo University Hospitals",
+    "instructorYears": "Years of experience",
+    "instructorLinkedIn": "LinkedIn URL",
+    "instructorPhoto": "Photo",
+    "instructorBio": "Biography",
+    "instructorBioPlaceholder": "Their background, focus and what they bring to this programme.",
+    "instructorCertifications": "Certifications",
+    "instructorHospitals": "Hospital affiliations",
+    "instructorHospitalsPlaceholder": "Cleveland Clinic Abu Dhabi",
+    "add": "Add"
   },
   "Pages": {
     "aboutTitle": "About IMETS Medical School",
@@ -957,8 +974,8 @@
     "footerPrivacyLink": "Privacy Policy",
     "footerRefundLink": "Refund Policy",
     "catalogTitle": "Healthcare Diplomas & Certification Programs",
-    "catalogMetaTitle": "Live Healthcare Diploma & Certification Programs | IMETS",
-    "catalogMetaDescription": "Explore live healthcare diploma & certification programs at IMETS. Learn hospital management, healthcare quality, infection control, HR & marketing from experts.",
+    "catalogMetaTitle": "Healthcare Diplomas & Certification Programs | IMETS",
+    "catalogMetaDescription": "Live online healthcare diplomas and exam prep — CPHQ, CIC, quality, infection control and hospital management. Taught by practitioners.",
     "catalogBreadcrumb": "Programs",
     "catalogSubtitle": "Join live healthcare diploma and certification programs designed for healthcare professionals, hospitals, clinics, and healthcare organizations across the Middle East. Learn from industry experts through interactive online sessions.",
     "catalogTrustLabel": "Trusted by healthcare teams across the region",
@@ -1303,7 +1320,9 @@
     "footerColResources": "Resources",
     "footerCertVerify": "Certificate Verification",
     "footerResources": "Resources",
-    "footerNews": "News"
+    "footerNews": "News",
+    "homeMetaTitle": "Healthcare Courses & Diplomas Online | IMETS Medical School",
+    "homeMetaDescription": "Live online healthcare diplomas and certification prep for Egypt and the Gulf — CPHQ, CIC, infection control, quality and hospital management."
   },
   "Student": {
     "dashboardTitle": "My learning",

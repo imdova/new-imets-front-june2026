@@ -13,6 +13,7 @@ import {
   Star,
   CheckCircle2,
   Flame,
+  MapPin,
 } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
@@ -42,6 +43,12 @@ import {
   CourseKnowledgeCenter,
   CoursePullQuote,
 } from "@/features/marketing/components/course-detail-sections";
+import { CourseKnowledgeArticles } from "@/features/marketing/components/course-knowledge-articles";
+import {
+  geoCoursePagesFor,
+  geoContent,
+  geoCoursePath,
+} from "@/features/marketing/lib/geo-course-pages";
 import { CourseAbout } from "@/features/marketing/components/course-about";
 import { buildCourseAbout } from "@/features/marketing/lib/course-about";
 import {
@@ -214,6 +221,53 @@ export default async function CourseDetailPage({
         .slice(0, 4);
 
   const tr = (en: string, ar: string) => (locale === "ar" ? ar : en);
+
+  /** Country landing pages that exist for this course (SEO-08). */
+  const geoPages = geoCoursePagesFor(course.slug);
+
+  /*
+   * Link the course's instructor block to a real faculty profile when one
+   * matches, so `CourseInstance.instructor` can reference that Person by id
+   * instead of carrying a second, unlinked copy of them. No match ⇒ the name is
+   * emitted inline and nothing claims a profile page that does not exist.
+   */
+  const facultyRes = await dal.lookups.fetchInstructors();
+  const faculty = (facultyRes.ok ? facultyRes.data : []).find(
+    (i) =>
+      !!course.instructorProfile?.name &&
+      i.label.trim().toLowerCase() === course.instructorProfile.name.trim().toLowerCase(),
+  );
+  const instructorProfileUrl = faculty
+    ? localeUrl(`/instructors/${faculty.slug || faculty.id}`, locale)
+    : undefined;
+
+  /*
+   * Supporting articles, by reverse lookup on the blog's `relatedCourseSlugs`.
+   * Linking ran one way — 48 posts pointed at courses and no course pointed
+   * back — so each topic cluster had a hub page that was not actually a hub.
+   *
+   * Same-locale only: an Arabic course page linking out to English articles is
+   * a cross-locale link, so the block simply does not render until Arabic posts
+   * exist. Posts with no `language` are treated as English, which is what the
+   * backend stores today.
+   */
+  const articlesRes = await dal.blog.fetchPublicArticles({ limit: 200 });
+  const knowledgeArticles = (articlesRes.ok ? articlesRes.data.data : [])
+    .filter(
+      (p) =>
+        (p.language || "en") === locale &&
+        (p.relatedCourseSlugs ?? []).includes(course.slug),
+    )
+    .sort((a, b) => (b.publishedAt ?? "").localeCompare(a.publishedAt ?? ""))
+    .slice(0, 6)
+    .map((p) => ({
+      slug: p.slug,
+      title: p.title,
+      excerpt: p.excerpt,
+      category: p.category,
+      readingMinutes: p.readingMinutes,
+      publishedAt: p.publishedAt,
+    }));
 
   // The wall shows stored, consented reviews only. With none, the section is
   // not rendered at all — it must never fall back to sample testimonials.
@@ -554,6 +608,9 @@ export default async function CourseDetailPage({
     ...(content.knowledgeCenter?.length
       ? [{ id: "knowledge-center", label: tr("Knowledge Center", "مركز المعرفة") }]
       : []),
+    ...(knowledgeArticles.length
+      ? [{ id: "articles", label: tr("Articles", "مقالات") }]
+      : []),
   ];
 
   const enrollCard = (
@@ -768,7 +825,9 @@ export default async function CourseDetailPage({
             // Future cohorts only — `courseLd` drops past-dated ones itself.
             instances: course.intakes,
             courseMode: "online",
-            instructors: instructorName ? [{ name: instructorName }] : undefined,
+            instructors: instructorName
+              ? [{ name: instructorName, url: instructorProfileUrl }]
+              : undefined,
             // Gated: real, consented reviews only. A course with none emits no
             // rating and no Review markup — silence beats claiming stars nobody gave.
             rating: hasRealReviews && course.rating > 0 ? course.rating : undefined,
@@ -1074,6 +1133,45 @@ export default async function CourseDetailPage({
               {content.seoSections.length > 0 && (
                 <CourseSectionBand tone="white" spacing="lg">
                   <CourseSeoContent locale={locale} sections={content.seoSections} />
+                </CourseSectionBand>
+              )}
+
+              {/* Country pages for this course. Also the crawl path to them —
+                  an orphaned landing page in the sitemap and nowhere else is a
+                  page Google is entitled to treat as low-value. */}
+              {geoPages.length > 0 && (
+                <CourseSectionBand tone="white" spacing="sm">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <span className="text-sm font-medium text-muted-foreground">
+                      {tr("Studying from:", "تدرس من:")}
+                    </span>
+                    {geoPages.map((g) => {
+                      const gc = geoContent(g, locale);
+                      return (
+                        <Link
+                          key={g.country}
+                          href={geoCoursePath(g)}
+                          className="inline-flex items-center gap-1.5 rounded-full border border-border/70 px-4 py-1.5 text-sm font-medium transition-colors hover:border-primary/40 hover:text-primary"
+                        >
+                          <MapPin className="size-3.5" />
+                          {tr(
+                            `${gc.countryName} — fees in ${g.currency}`,
+                            `${gc.countryName} — الأسعار بـ ${g.currency}`,
+                          )}
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </CourseSectionBand>
+              )}
+
+              {knowledgeArticles.length > 0 && (
+                <CourseSectionBand tone="muted" spacing="lg">
+                  <CourseKnowledgeArticles
+                    locale={locale}
+                    articles={knowledgeArticles}
+                    courseTitle={locale === "ar" ? course.titleAr || course.titleEn : course.titleEn}
+                  />
                 </CourseSectionBand>
               )}
 

@@ -284,6 +284,13 @@ export function mapCourse(raw: any): CourseRow {
             )
             .filter(Boolean)
         : undefined,
+    // Ids only — `instructorIds` may arrive as raw ObjectId strings or as
+    // populated user documents depending on the endpoint.
+    instructorIds: Array.isArray(raw?.instructorIds)
+      ? raw.instructorIds
+          .map((i: any) => (typeof i === "string" ? i : i?._id ?? i?.id ?? ""))
+          .filter(Boolean)
+      : undefined,
     tagLabels: Array.isArray(raw?.tags)
       ? raw.tags
           .map((tg: any) => (typeof tg === "string" ? tg : tg?.nameEn ?? tg?.nameAr ?? tg?.name ?? ""))

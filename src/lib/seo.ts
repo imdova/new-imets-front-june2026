@@ -8,6 +8,10 @@ import type { Metadata } from "next";
 import { routing } from "@/i18n/routing";
 import { mergeSeo } from "@/lib/public-seo";
 
+/** Re-exported here as the SEO entry point; defined in `public-seo` so the
+ *  import between these two modules stays one-directional. */
+export { brandedTitle } from "@/lib/public-seo";
+
 export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://imetsedu.com").replace(/\/$/, "");
 export const SITE_NAME = "IMETS Medical School";
 export const SITE_LOGO = `${SITE_URL}/icon`;
@@ -38,8 +42,13 @@ export function metaDescription(input?: string, fallback = ""): string {
   return text.length > 160 ? `${text.slice(0, 157).trimEnd()}…` : text;
 }
 
-/** Shared OpenGraph/Twitter block for a public page. When no `image` is given,
- * the file-based default `opengraph-image` is used automatically. */
+/**
+ * The site-wide OG card, absolute. Social crawlers do not resolve relative
+ * paths, and a page that ships no `og:image` renders as a bare text link.
+ */
+export const DEFAULT_OG_IMAGE = `${SITE_URL}/opengraph-image`;
+
+/** Shared OpenGraph/Twitter block for a public page. */
 export function socialMeta(opts: {
   title: string;
   description: string;
@@ -47,7 +56,9 @@ export function socialMeta(opts: {
   locale: string;
   image?: string;
 }): Pick<Metadata, "openGraph" | "twitter"> {
-  const images = opts.image ? [opts.image] : undefined;
+  // Always an image: `undefined` here means the page inherits nothing, because
+  // a page-level `openGraph` replaces the layout's rather than merging with it.
+  const images = [opts.image || DEFAULT_OG_IMAGE];
   return {
     openGraph: {
       title: opts.title,
@@ -56,9 +67,9 @@ export function socialMeta(opts: {
       siteName: SITE_NAME,
       type: "website",
       locale: opts.locale === "ar" ? "ar_EG" : "en_US",
-      ...(images ? { images } : {}),
+      images,
     },
-    twitter: { card: "summary_large_image", title: opts.title, description: opts.description, ...(images ? { images } : {}) },
+    twitter: { card: "summary_large_image", title: opts.title, description: opts.description, images },
   };
 }
 
@@ -184,21 +195,58 @@ export function websiteLd() {
   };
 }
 
+/**
+ * The stable `@id` for a person, derived from the page that describes them.
+ *
+ * Healthcare education sits close enough to YMYL that a named, credentialed
+ * author is worth real weight — but only if every mention resolves to one
+ * entity. Emitting the same person as three separate inline objects (once on
+ * the course, once on the article, once on their own page) describes three
+ * different people as far as a consumer is concerned. Everything else
+ * references this id; only the person's own page defines the full node.
+ */
+export function personId(profileUrl: string): string {
+  return `${profileUrl}#person`;
+}
+
+/** A reference to a Person defined elsewhere — never a second copy of them. */
+export function personRef(profileUrl: string) {
+  return { "@id": personId(profileUrl) };
+}
+
 export function personLd(opts: {
   name: string;
   jobTitle?: string;
   image?: string;
   url: string;
   locale: string;
+  /** Subjects this person is credentialed in — drives topical authority. */
+  knowsAbout?: string[];
+  /** Institutions they trained at or are affiliated with. */
+  alumniOf?: string[];
+  /** Profile URLs elsewhere (LinkedIn, ORCID, a personal site). */
+  sameAs?: string[];
+  description?: string;
 }) {
+  const knowsAbout = (opts.knowsAbout ?? []).filter(Boolean);
+  const alumniOf = (opts.alumniOf ?? []).filter(Boolean);
+  const sameAs = (opts.sameAs ?? []).filter(Boolean);
   return {
     "@context": "https://schema.org",
     "@type": "Person",
+    "@id": personId(opts.url),
     name: opts.name,
     ...(opts.jobTitle ? { jobTitle: opts.jobTitle } : {}),
+    ...(opts.description ? { description: opts.description } : {}),
     ...(opts.image ? { image: opts.image } : {}),
     url: opts.url,
-    worksFor: { "@type": "EducationalOrganization", name: SITE_NAME, sameAs: SITE_URL },
+    ...(knowsAbout.length ? { knowsAbout } : {}),
+    ...(alumniOf.length
+      ? { alumniOf: alumniOf.map((name) => ({ "@type": "Organization", name })) }
+      : {}),
+    ...(sameAs.length ? { sameAs } : {}),
+    // By id, for the same reason as above — one organization entity, not one per page.
+    worksFor: { "@id": ORGANIZATION_ID },
     inLanguage: opts.locale,
   };
 }
@@ -391,13 +439,19 @@ export function courseLd(opts: {
             // The instance is what a buyer actually purchases, so it carries the
             // same multi-currency offers as the course.
             ...(offerNodes.length ? { offers: offerNodes } : {}),
+            /*
+             * By reference when the person has a profile page, inline only
+             * when they do not. An inline copy alongside a defined Person node
+             * is a second entity with the same name, which is worse than no
+             * markup at all for an author-authority signal.
+             */
             ...(instructors.length
               ? {
-                  instructor: instructors.map((p) => ({
-                    "@type": "Person",
-                    name: p.name,
-                    ...(p.url ? { url: p.url } : {}),
-                  })),
+                  instructor: instructors.map((p) =>
+                    p.url
+                      ? personRef(p.url)
+                      : { "@type": "Person", name: p.name },
+                  ),
                 }
               : {}),
           })),

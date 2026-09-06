@@ -1,5 +1,7 @@
 import { dal } from "@/lib/dal";
 import { localeUrl } from "@/lib/seo";
+import { listGeoCoursePages, geoCoursePath } from "@/features/marketing/lib/geo-course-pages";
+import { revisionDate } from "@/features/blog/lib/revision-date";
 
 /**
  * Shared sitemap data + XML serialisation.
@@ -43,8 +45,26 @@ const STATIC_PATHS = [
   "/success-stories",
 ];
 
-/** A path plus the real timestamp of the content behind it, when one exists. */
-export type SitemapRow = { path: string; lastModified?: Date };
+export type SitemapLocale = "en" | "ar";
+
+/**
+ * A path, the real timestamp of the content behind it, and the locales it
+ * actually exists in.
+ *
+ * `locales` defaults to both. It matters for the blog: all 48 articles are
+ * English, but every one was being submitted twice — `/blog/x` and
+ * `/ar/blog/x` — serving byte-identical English content while the hreflang tag
+ * claimed one of them was Arabic. That is 48 self-inflicted duplicate titles
+ * (the site-wide audit counted 50 in total, and 48 of them were this), and it
+ * asks Google to index a translation that does not exist.
+ */
+export type SitemapRow = {
+  path: string;
+  lastModified?: Date;
+  locales?: SitemapLocale[];
+};
+
+const BOTH_LOCALES: SitemapLocale[] = ["en", "ar"];
 
 /** Parse an API timestamp, discarding anything unusable. */
 function realDate(value?: string | null): Date | undefined {
@@ -74,11 +94,27 @@ export async function collectSitemapRows(): Promise<{
   ]);
 
   const courses: SitemapRow[] = [];
+  const publishedSlugs = new Set<string>();
   if (coursesRes?.ok) {
     for (const c of coursesRes.data) {
       if (c.status !== "published" || !c.slug) continue;
+      publishedSlugs.add(c.slug);
       courses.push({ path: `/courses/${c.slug}`, lastModified: realDate(c.updatedAt) });
     }
+  }
+
+  /*
+   * Country landing pages (`/cphq-course/egypt`). They sit with the courses
+   * rather than the marketing pages because that is what they are — a course
+   * page for one market. Both locales are emitted by `urlsetXml`, so the
+   * Arabic version is submitted too. No `lastModified`: the content lives in a
+   * checked-in JSON file with no publish timestamp, and inventing one would put
+   * a meaningless date in front of a crawler. A page whose course is no longer
+   * published is skipped, matching what the route itself does.
+   */
+  for (const geo of listGeoCoursePages()) {
+    if (!publishedSlugs.has(geo.courseSlug)) continue;
+    courses.push({ path: geoCoursePath(geo) });
   }
 
   // The public list returns only PUBLISHED articles.
@@ -86,7 +122,15 @@ export async function collectSitemapRows(): Promise<{
   if (blogRes?.ok) {
     for (const post of blogRes.data.data) {
       if (!post.slug) continue;
-      blog.push({ path: `/blog/${post.slug}`, lastModified: realDate(post.updatedAt) });
+      // `updatedAt` is not a revision date (see `features/blog/lib/revision-date.ts`),
+      // so a post that was never edited ships its publication date instead of
+      // telling the crawler it changed today.
+      blog.push({
+        path: `/blog/${post.slug}`,
+        lastModified: realDate(revisionDate(post.publishedAt, post.updatedAt) ?? post.publishedAt),
+        // Only the locale the article is actually written in.
+        locales: [(post.language === "ar" ? "ar" : "en") as SitemapLocale],
+      });
     }
   }
 
@@ -136,19 +180,29 @@ function esc(value: string): string {
  * Serialise rows into a urlset for one locale, with hreflang alternates on every
  * entry pointing at both locales plus `x-default`.
  */
-export function urlsetXml(rows: SitemapRow[], locale: "en" | "ar"): string {
+export function urlsetXml(rows: SitemapRow[], locale: SitemapLocale): string {
   const urls = rows
+    // A row is absent from a locale's file when the content does not exist in it.
+    .filter((row) => (row.locales ?? BOTH_LOCALES).includes(locale))
     .map((row) => {
+      const locales = row.locales ?? BOTH_LOCALES;
       const en = esc(localeUrl(row.path, "en"));
       const ar = esc(localeUrl(row.path, "ar"));
       const self = locale === "ar" ? ar : en;
+      /*
+       * Alternates only for locales that exist. Declaring an `ar` alternate for
+       * an English-only article tells Google there is a translation to index,
+       * and what it finds there is the English text over again.
+       */
+      const alternates =
+        (locales.includes("en") ? `    <xhtml:link rel="alternate" hreflang="en" href="${en}"/>\n` : "") +
+        (locales.includes("ar") ? `    <xhtml:link rel="alternate" hreflang="ar" href="${ar}"/>\n` : "") +
+        `    <xhtml:link rel="alternate" hreflang="x-default" href="${locales.includes("en") ? en : ar}"/>\n`;
       return (
         `  <url>\n` +
         `    <loc>${self}</loc>\n` +
         (row.lastModified ? `    <lastmod>${row.lastModified.toISOString()}</lastmod>\n` : "") +
-        `    <xhtml:link rel="alternate" hreflang="en" href="${en}"/>\n` +
-        `    <xhtml:link rel="alternate" hreflang="ar" href="${ar}"/>\n` +
-        `    <xhtml:link rel="alternate" hreflang="x-default" href="${en}"/>\n` +
+        alternates +
         `  </url>\n`
       );
     })

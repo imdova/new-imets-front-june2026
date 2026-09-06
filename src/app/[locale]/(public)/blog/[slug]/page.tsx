@@ -2,23 +2,27 @@ import { cache } from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import { CalendarDays, Clock, ChevronRight, ArrowRight } from "lucide-react";
+import { ChevronRight, ArrowRight } from "lucide-react";
 import { setRequestLocale } from "next-intl/server";
 
 import { Link } from "@/i18n/navigation";
 import { dal } from "@/lib/dal";
 import { Badge } from "@/components/ui/badge";
 import { JsonLd } from "@/components/seo/json-ld";
-import { SITE_URL, SITE_NAME, localeUrl, metaDescription, breadcrumbLd } from "@/lib/seo";
+import {
+  SITE_URL, SITE_NAME, localeUrl, metaDescription, breadcrumbLd, personRef, ORGANIZATION_ID,
+} from "@/lib/seo";
 import { ArticleSections, ArticleContent, headingId } from "@/features/blog/components/article-sections";
 import { ReadingProgress, ArticleToc } from "@/features/blog/components/article-reader-ui";
+import { CourseCallout } from "@/features/blog/components/course-callout";
+import { ArticleByline, type ArticleAuthor } from "@/features/blog/components/article-byline";
+import { courseAnchorText } from "@/features/blog/lib/course-anchors";
+import { splitAtSecondHeading } from "@/features/blog/lib/split-sections";
+import { revisionDate } from "@/features/blog/lib/revision-date";
 
 // Memoize per request so generateMetadata + the page share one fetch
 // (the backend increments `views` on read — we want exactly one increment).
 const getArticle = cache((slug: string) => dal.blog.fetchArticleBySlug(slug));
-
-const fmtDate = (iso?: string) =>
-  iso ? new Date(iso).toLocaleDateString("en", { month: "long", day: "numeric", year: "numeric" }) : "";
 
 export async function generateMetadata({
   params,
@@ -54,6 +58,28 @@ export default async function ArticleDetailPage({
   if (!res.ok || !res.data) notFound();
   const post = res.data;
 
+  /*
+   * Resolve the post's author to a real faculty member with a profile page.
+   *
+   * The instructor lookup is the public source — it is what `/instructors/...`
+   * renders from, so anything resolved here is guaranteed to have a page to
+   * link to. Nothing resolves today: there are no instructor records, and no
+   * post carries an `authorId`. The byline then attributes the school, exactly
+   * as it does now, and no Person is invented to fill the gap.
+   */
+  const instructorsRes = await dal.lookups.fetchInstructors();
+  const instructor = post.authorId
+    ? (instructorsRes.ok ? instructorsRes.data : []).find((i) => i.id === post.authorId)
+    : undefined;
+  const author: ArticleAuthor | null = instructor
+    ? {
+        name: instructor.label,
+        credentials: instructor.title,
+        avatarUrl: instructor.avatarUrl,
+        profilePath: `/instructors/${instructor.slug || instructor.id}`,
+      }
+    : null;
+
   const articleLd = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
@@ -61,14 +87,26 @@ export default async function ArticleDetailPage({
     description: post.excerpt,
     image: post.coverImageUrl || `${SITE_URL}/blog/${post.slug}/og`,
     datePublished: post.publishedAt,
-    dateModified: post.updatedAt || post.publishedAt,
+    // Absent unless the article was genuinely revised — see `revision-date.ts`.
+    dateModified: revisionDate(post.publishedAt, post.updatedAt),
     inLanguage: post.language || locale,
     keywords: post.tags?.length ? post.tags.join(", ") : undefined,
     articleSection: post.category || undefined,
-    author: post.authorName
-      ? { "@type": "Organization", name: post.authorName }
-      : { "@type": "Organization", name: SITE_NAME },
-    publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    /*
+     * A named, credentialed author is a real quality signal on health content,
+     * so when one resolves we point at their Person node by id rather than
+     * inlining a copy — the same entity is then referenced from their profile
+     * page and from any course they teach.
+     *
+     * With no author record we attribute the school, which is accurate and is
+     * what the site does today. A `Person` here with the organisation's name in
+     * it would be a fabricated human being, which on YMYL content is the single
+     * worst thing this page could claim.
+     */
+    author: author
+      ? personRef(localeUrl(author.profilePath!, locale))
+      : { "@type": "Organization", name: post.authorName || SITE_NAME },
+    publisher: { "@id": ORGANIZATION_ID },
     mainEntityOfPage: localeUrl(`/blog/${post.slug}`, locale),
   };
 
@@ -105,6 +143,28 @@ export default async function ArticleDetailPage({
     .map((slug) => coursesRes?.ok ? coursesRes.data.find((c) => c.slug === slug) : undefined)
     .filter((c): c is NonNullable<typeof c> => Boolean(c));
 
+  /*
+   * The primary course gets an in-body callout instead of a card at the very
+   * bottom; the rest stay in the "Related courses" list. Splitting them this way
+   * means no course is linked twice from one article, so the varied anchor in
+   * the callout is the anchor for that target rather than being shadowed by a
+   * second exact-match title link further down.
+   */
+  const [primaryCourse, ...secondaryCourses] = related;
+
+  /*
+   * Insert the callout after the first major section. A link parked under the
+   * tag list reads as boilerplate to both readers and crawlers; one placed
+   * after the reader has finished the opening argument is contextual. An
+   * article too short or too oddly laid out to have a natural break falls back
+   * to rendering it after the body — still inside the article, still above the
+   * tags.
+   */
+  const sections = post.sections ?? [];
+  const split = splitAtSecondHeading(sections);
+  const sectionsBefore = split?.before ?? sections;
+  const sectionsAfter = split?.after ?? [];
+
   // Table of contents from the article's H2s (ids match the renderer's slug).
   const tocItems = (post.sections ?? [])
     .flatMap((s) => s.cols)
@@ -136,19 +196,15 @@ export default async function ArticleDetailPage({
         {post.excerpt && (
           <p className="mt-4 max-w-2xl text-lg leading-relaxed text-muted-foreground">{post.excerpt}</p>
         )}
-        <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground">
-          {post.authorName && (
-            <span className="inline-flex items-center gap-2 font-medium text-foreground">
-              <span className="grid size-7 place-items-center rounded-full bg-primary/15 text-xs font-bold text-primary">
-                {post.authorName.slice(0, 1)}
-              </span>
-              {post.authorName}
-            </span>
-          )}
-          {post.publishedAt && (
-            <span className="inline-flex items-center gap-1.5"><CalendarDays className="size-4" />{fmtDate(post.publishedAt)}</span>
-          )}
-          <span className="inline-flex items-center gap-1.5"><Clock className="size-4" />{post.readingMinutes} {locale === "ar" ? "دقيقة قراءة" : "min read"}</span>
+        <div className="mt-5">
+          <ArticleByline
+            author={author}
+            organisationName={post.authorName || SITE_NAME}
+            publishedAt={post.publishedAt}
+            updatedAt={revisionDate(post.publishedAt, post.updatedAt)}
+            readingMinutes={post.readingMinutes}
+            locale={locale}
+          />
         </div>
       </header>
 
@@ -168,10 +224,21 @@ export default async function ArticleDetailPage({
       {/* Body + table-of-contents rail */}
       <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1fr)_15rem] lg:gap-12">
         <div id="article-body" className="min-w-0">
-          {post.sections && post.sections.length > 0 ? (
-            <ArticleSections sections={post.sections} />
+          {sections.length > 0 ? (
+            <>
+              <ArticleSections sections={sectionsBefore} />
+              {primaryCourse && (
+                <CourseCallout course={primaryCourse} postSlug={post.slug} locale={locale} />
+              )}
+              {sectionsAfter.length > 0 && <ArticleSections sections={sectionsAfter} />}
+            </>
           ) : (
-            <ArticleContent html={post.content} />
+            <>
+              <ArticleContent html={post.content} />
+              {primaryCourse && (
+                <CourseCallout course={primaryCourse} postSlug={post.slug} locale={locale} />
+              )}
+            </>
           )}
 
           {post.tags.length > 0 && (
@@ -186,16 +253,16 @@ export default async function ArticleDetailPage({
         </aside>
       </div>
 
-      {/* Related courses — the course title IS the anchor text, which is the
-          only reason an internal link like this carries any weight. */}
-      {related.length > 0 && (
+      {/* Secondary course links. The primary course is linked in-body above, so
+          nothing is linked twice from one article. */}
+      {secondaryCourses.length > 0 && (
         <section className="mt-10 border-t border-border/60 pt-8">
           <h2 className="font-heading text-xl font-semibold">
             {locale === "ar" ? "برامج ذات صلة" : "Related courses"}
           </h2>
           <ul className="mt-4 space-y-2.5">
-            {related.map((c) => {
-              const title = locale === "ar" ? c.titleAr || c.titleEn : c.titleEn;
+            {secondaryCourses.map((c) => {
+              const title = courseAnchorText(c, post.slug, locale);
               return (
                 <li key={c.slug}>
                   <Link

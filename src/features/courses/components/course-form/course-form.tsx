@@ -25,6 +25,7 @@ import { toCoursePayload } from "../../lib/to-course-payload";
 import { BasicInfoStep } from "./steps/basic-info-step";
 import { StructureStep } from "./steps/structure-step";
 import { MediaReviewsStep } from "./steps/media-reviews-step";
+import { InstructorProfileSection } from "./instructor-profile-section";
 import { FormTips } from "./form-tips";
 
 interface CourseFormProps {
@@ -147,7 +148,13 @@ export function CourseForm({
                 />
               )}
               {step === 1 && <StructureStep column="main" />}
-              {step === 2 && <MediaReviewsStep column="main" />}
+              {step === 2 && (
+                <>
+                  <MediaReviewsStep column="main" />
+                  {/* Who teaches this — sits with the other credibility content. */}
+                  <InstructorProfileSection />
+                </>
+              )}
             </motion.div>
           </AnimatePresence>
 

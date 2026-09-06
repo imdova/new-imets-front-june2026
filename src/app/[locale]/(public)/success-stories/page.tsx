@@ -24,12 +24,12 @@ export async function generateMetadata({
   const { locale } = await params;
   const title =
     locale === "ar"
-      ? "قصص نجاح متخصصي الرعاية الصحية"
-      : "Success Stories From Healthcare Professionals Across the Middle East";
+      ? "قصص نجاح متخصصي الرعاية الصحية | IMETS"
+      : "Healthcare Career Success Stories | IMETS Medical School";
   const description =
     locale === "ar"
       ? "اكتشف كيف طوّر الأطباء والممرضون والصيادلة وقادة الرعاية الصحية ومتخصصو الجودة مسيرتهم المهنية بعد الانضمام إلى IMETS Medical School عبر مصر ودول الخليج."
-      : "Discover how physicians, nurses, pharmacists, healthcare leaders, and quality professionals across Egypt and the GCC advanced their careers after joining IMETS Medical School.";
+      : "How physicians, nurses, pharmacists and quality professionals across Egypt and the Gulf advanced their careers after training with IMETS.";
   return mergeSeo("/success-stories", {
     title,
     description,

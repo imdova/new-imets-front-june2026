@@ -170,6 +170,20 @@ export function mapCourseToForm(raw: any): Partial<CourseFormValues> {
       passRateBasisAr: raw.proof?.passRateBasisAr ?? "",
       passRateVerifiedAt: dateInput(raw.proof?.passRateVerifiedAt),
     },
+    instructorProfile: {
+      name: raw.instructorProfile?.name ?? "",
+      title: raw.instructorProfile?.title ?? "",
+      image: raw.instructorProfile?.image ?? "",
+      bio: raw.instructorProfile?.bio ?? "",
+      yearsExperience: Number(raw.instructorProfile?.yearsExperience) || 0,
+      hospitals: Array.isArray(raw.instructorProfile?.hospitals)
+        ? raw.instructorProfile.hospitals.filter((h: unknown): h is string => typeof h === "string")
+        : [],
+      certifications: Array.isArray(raw.instructorProfile?.certifications)
+        ? raw.instructorProfile.certifications.filter((c: unknown): c is string => typeof c === "string")
+        : [],
+      linkedIn: raw.instructorProfile?.linkedIn ?? "",
+    },
     textReviews: Array.isArray(raw.textReviews)
       ? raw.textReviews.map((r: any) => ({
           reviewerName: r?.reviewerName ?? "",

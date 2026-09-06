@@ -22,8 +22,8 @@ export async function generateMetadata({
   const { locale } = await params;
   const title = tr(
     locale,
-    "Free Healthcare Courses — Watch Free Lectures Online",
-    "كورسات رعاية صحية مجانية — شاهد محاضرات مجانية أونلاين",
+    "Free Healthcare Courses & Lectures Online | IMETS",
+    "كورسات ومحاضرات رعاية صحية مجانية أونلاين | IMETS",
   );
   const description = tr(
     locale,

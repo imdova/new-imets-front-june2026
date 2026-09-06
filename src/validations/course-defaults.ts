@@ -64,6 +64,10 @@ export function makeDefaultCourseValues(): CourseFormValues {
     suppressBrandSuffix: false,
     intakes: [],
     proof: { passRate: 0, passRateBasisEn: "", passRateBasisAr: "", passRateVerifiedAt: "" },
+    instructorProfile: {
+      name: "", title: "", image: "", bio: "",
+      yearsExperience: 0, hospitals: [], certifications: [], linkedIn: "",
+    },
     whatYouWillLearnEn: [],
     whatYouWillLearnAr: [],
     whoCanAttendEn: "",

@@ -1,0 +1,158 @@
+{
+  "country": "egypt",
+  "countryCode": "EG",
+  "currency": "EGP",
+  "courseSlug": "cphq-preparation",
+  "en": {
+    "countryName": "Egypt",
+    "title": "CPHQ Course in Egypt | Fees in EGP, Exam & GAHAR Context",
+    "metaDescription": "Live online CPHQ preparation for candidates in Egypt: course fees in Egyptian pounds, how to sit the NAHQ exam from Egypt, and how the CPHQ fits alongside GAHAR and EGYCAP.",
+    "h1": "CPHQ Course in Egypt",
+    "intro": "IMETS runs its CPHQ preparation course live online for candidates in Egypt, priced in Egyptian pounds and taught with Arabic-language support. This page covers what the certification is worth in the Egyptian market, how the exam works from here, and what the whole thing actually costs.",
+    "sections": [
+      {
+        "heading": "Why quality roles are growing in Egypt",
+        "paragraphs": [
+          "Egypt is in the middle of the largest healthcare reform in its modern history: the rollout of Universal Health Insurance. The reform advances governorate by governorate, and the route into the new system runs through GAHAR — the General Authority for Healthcare Accreditation and Regulation, established under Universal Health Insurance Law No. 2. GAHAR sets the national quality and patient-safety standards and accredits facilities against them, which makes accreditation the gateway to the system rather than a plaque on the wall.",
+          "The practical consequence for careers is a sustained wave of hiring. Thousands of hospitals and clinics have to reach GAHAR accreditation and then hold it through repeat survey, and each of them needs people who can run self-assessment, gather evidence, manage audits and lead improvement projects. That demand is structural rather than a hiring spike: it lasts as long as the rollout does, and then continues as maintenance work."
+        ]
+      },
+      {
+        "heading": "CPHQ and EGYCAP are not competitors",
+        "paragraphs": [
+          "Two credentials do most of the work in an Egyptian quality career, and they answer different questions.",
+          "EGYCAP is GAHAR's own certification — Certified Healthcare Facility Accreditation Professional. It is deliberately national: it certifies you to prepare facilities for the exact standards Egypt uses, which makes it immediately legible to any Egyptian employer.",
+          "The CPHQ is NAHQ's international credential. It certifies the underlying discipline — measurement, improvement methodology, patient safety and data — rather than one country's standards. It is the credential that travels if you ever move to the Gulf, and the one international recruiters recognise on sight.",
+          "Most of the people we teach are not choosing between the two. They take the CPHQ for the methodology and the mobility, and they learn GAHAR's standards because that is the system they work inside every day."
+        ]
+      },
+      {
+        "heading": "Sitting the CPHQ exam from Egypt",
+        "paragraphs": [
+          "You do not need to travel for the CPHQ. The exam is computer-based and can be taken either at an approved test centre or through online proctoring from home or the office, with a webcam and a quiet room. For candidates in Egypt, remote proctoring is usually the simpler route.",
+          "The paper is 140 multiple-choice questions, of which 15 are unscored pre-test items. Because you cannot tell which 15 they are, every question has to be answered as though it counts. Scoring is scaled rather than a fixed percentage, so the target is the scaled pass mark and not a raw number of correct answers.",
+          "International candidates — which includes Egypt — apply on a rolling 90-day basis and pay the international fee tier. NAHQ revises its fees, windows and rules periodically, so confirm the current figures on nahq.org before you apply."
+        ]
+      },
+      {
+        "heading": "What it costs from Egypt",
+        "paragraphs": [
+          "There are two separate costs, in two separate currencies, and it is worth separating them before you budget.",
+          "The course is priced in Egyptian pounds at {price}. That is what you pay IMETS, and it covers the ten weeks of live teaching and the materials that go with them.",
+          "The exam is paid separately, to NAHQ, in US dollars. In 2026 the international tier runs roughly $559 for NAHQ members and $799 for non-members. Treat it as its own line in the budget, and check the live figure on nahq.org — of the two numbers on this page, it is the one most likely to have moved by the time you apply."
+        ]
+      },
+      {
+        "heading": "How the course runs",
+        "paragraphs": [
+          "Ten weeks, live online, with sessions recorded — a night shift costs you a replay, not a week of the course.",
+          "Support is available in Arabic, which matters more than it sounds. The CPHQ tests reasoning about quality concepts in English, and most candidates get there faster when the concept is explained in their first language and the terminology is practised in the exam's."
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "q": "Do I have to travel to Cairo to sit the CPHQ?",
+        "a": "No. The exam can be taken through online proctoring from home or your office, with a webcam and a quiet room. An approved test centre is an alternative, not a requirement."
+      },
+      {
+        "q": "Can I pay for the course in Egyptian pounds?",
+        "a": "Yes. The course fee is set in EGP. The NAHQ exam fee is a separate payment, made to NAHQ in US dollars."
+      },
+      {
+        "q": "Does GAHAR require me to hold a CPHQ?",
+        "a": "No. GAHAR accredits facilities, not individuals, so no personal certificate is a legal requirement. In practice, facilities preparing for survey increasingly want certified people running the work."
+      },
+      {
+        "q": "Should I take EGYCAP or the CPHQ first?",
+        "a": "If your work sits entirely inside the Egyptian system and you need to be useful to your employer immediately, EGYCAP is the closer fit. If you want a credential that stays valid when you move to Saudi Arabia or the UAE, start with the CPHQ."
+      },
+      {
+        "q": "Do I need a degree to sit the CPHQ?",
+        "a": "No. There is no formal education requirement for the CPHQ. What matters is relevant experience in healthcare quality rather than a specific qualification."
+      },
+      {
+        "q": "Is the course taught in Arabic or English?",
+        "a": "Teaching covers the exam's English terminology, with explanation and support available in Arabic throughout."
+      }
+    ],
+    "ctaHeading": "Join the next cohort from Egypt",
+    "ctaBody": "Ten weeks, live online, priced in Egyptian pounds. Ask us anything about eligibility or the exam before you commit."
+  },
+  "ar": {
+    "countryName": "مصر",
+    "title": "كورس CPHQ في مصر | الرسوم بالجنيه المصري والامتحان و GAHAR",
+    "metaDescription": "كورس تحضيري مباشر أونلاين لشهادة CPHQ للمرشحين في مصر: الرسوم بالجنيه المصري، وكيفية أداء امتحان NAHQ من مصر، وموقع الشهادة بجانب GAHAR و EGYCAP.",
+    "h1": "كورس CPHQ في مصر",
+    "intro": "تقدّم IMETS كورس التحضير لشهادة CPHQ مباشرةً أونلاين للمرشحين في مصر، بسعر بالجنيه المصري ومع دعم كامل باللغة العربية. توضّح هذه الصفحة قيمة الشهادة في سوق العمل المصري، وكيف تؤدي الامتحان من داخل مصر، والتكلفة الفعلية كاملة.",
+    "sections": [
+      {
+        "heading": "لماذا تتوسّع وظائف الجودة في مصر الآن",
+        "paragraphs": [
+          "تمرّ مصر بأكبر إصلاح صحي في تاريخها الحديث: تطبيق التأمين الصحي الشامل. يسير هذا الإصلاح محافظةً بعد محافظة، والطريق إلى دخول المنظومة الجديدة يمرّ عبر الهيئة العامة للاعتماد والرقابة الصحية (GAHAR) المنشأة بموجب قانون التأمين الصحي الشامل رقم 2. تضع الهيئة معايير الجودة وسلامة المرضى على المستوى الوطني وتعتمد المنشآت بناءً عليها، وهو ما يجعل الاعتماد بوابة الدخول للمنظومة لا مجرد شهادة تُعلّق على الحائط.",
+          "النتيجة العملية على مستوى الوظائف موجة توظيف مستمرة. آلاف المستشفيات والعيادات مطالَبة بالحصول على اعتماد GAHAR ثم الحفاظ عليه عبر زيارات تقييم متكررة، وكل منشأة تحتاج إلى من يجيد التقييم الذاتي وجمع الأدلة وإدارة التدقيق وقيادة مشروعات التحسين. هذا طلب هيكلي وليس موجة عابرة: يستمر طوال فترة التطبيق ثم يتحوّل إلى عمل صيانة دائم."
+        ]
+      },
+      {
+        "heading": "CPHQ و EGYCAP ليستا بديلين عن بعضهما",
+        "paragraphs": [
+          "هناك شهادتان تقومان بمعظم العمل في مسار الجودة داخل مصر، وكل منهما تجيب عن سؤال مختلف.",
+          "شهادة EGYCAP هي شهادة GAHAR نفسها — أخصائي اعتماد المنشآت الصحية المعتمد. وهي وطنية بشكل مقصود: تؤهّلك لإعداد المنشآت للمعايير المصرية تحديدًا، ما يجعل قيمتها واضحة فورًا لأي جهة عمل مصرية.",
+          "أما CPHQ فهي الشهادة الدولية الصادرة عن NAHQ. تشهد على إتقان التخصص نفسه — القياس ومنهجيات التحسين وسلامة المرضى والبيانات — لا على معايير دولة بعينها. وهي الشهادة التي تنتقل معك إذا انتقلت إلى الخليج، والتي يعرفها مسؤولو التوظيف الدوليون فور رؤيتها.",
+          "معظم من ندرّس لهم لا يختارون بين الاثنتين. يحصلون على CPHQ من أجل المنهجية وحرية الانتقال، ويتعلّمون معايير GAHAR لأنها المنظومة التي يعملون داخلها كل يوم."
+        ]
+      },
+      {
+        "heading": "أداء امتحان CPHQ من داخل مصر",
+        "paragraphs": [
+          "لا تحتاج إلى السفر لأداء امتحان CPHQ. الامتحان إلكتروني ويمكن أداؤه في أحد مراكز الاختبار المعتمدة أو عبر المراقبة الإلكترونية من المنزل أو مقر العمل، بكاميرا ويب وغرفة هادئة. وبالنسبة للمرشحين في مصر تكون المراقبة عن بُعد عادةً الخيار الأبسط.",
+          "يتكوّن الامتحان من 140 سؤال اختيار من متعدد، منها 15 سؤالًا تجريبيًا لا يُحتسب. ولأنك لا تستطيع تمييز هذه الأسئلة الخمسة عشر، يجب التعامل مع كل سؤال باعتباره محتسبًا. كما أن التصحيح يعتمد على درجة معيارية لا على نسبة مئوية ثابتة، أي أن الهدف هو تجاوز درجة النجاح المعيارية لا عدد إجابات صحيحة بعينه.",
+          "يتقدّم المرشحون الدوليون — ومصر ضمنهم — على أساس نافذة متجددة مدتها 90 يومًا، ويدفعون فئة الرسوم الدولية. وتراجع NAHQ رسومها ونوافذها وقواعدها من حين لآخر، لذا تأكّد من الأرقام الحالية على موقع nahq.org قبل التقديم."
+        ]
+      },
+      {
+        "heading": "التكلفة من مصر",
+        "paragraphs": [
+          "هناك تكلفتان منفصلتان بعملتين مختلفتين، ومن الأفضل الفصل بينهما قبل وضع الميزانية.",
+          "سعر الكورس بالجنيه المصري: {price}. هذا ما تدفعه لـ IMETS، ويشمل عشرة أسابيع من التدريس المباشر والمواد المصاحبة له.",
+          "أما رسوم الامتحان فتُدفع بشكل منفصل إلى NAHQ بالدولار الأمريكي. في عام 2026 تبلغ الفئة الدولية نحو 559 دولارًا لأعضاء NAHQ و799 دولارًا لغير الأعضاء. اعتبرها بندًا مستقلًا في ميزانيتك، وتحقّق من الرقم الحالي على nahq.org — فهو الرقم الأرجح أن يكون قد تغيّر وقت تقديمك."
+        ]
+      },
+      {
+        "heading": "كيف يسير الكورس",
+        "paragraphs": [
+          "عشرة أسابيع من التدريس المباشر أونلاين، مع تسجيل الجلسات — فالوردية الليلية تكلّفك إعادة مشاهدة لا أسبوعًا كاملًا من الكورس.",
+          "الدعم متاح باللغة العربية، وهذه نقطة أهم مما تبدو. يختبر امتحان CPHQ قدرتك على التفكير في مفاهيم الجودة باللغة الإنجليزية، ومعظم المرشحين يصلون إلى ذلك أسرع حين يُشرح لهم المفهوم بلغتهم الأولى وتُتدرَّب المصطلحات بلغة الامتحان."
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "q": "هل يجب أن أسافر إلى القاهرة لأداء امتحان CPHQ؟",
+        "a": "لا. يمكن أداء الامتحان عبر المراقبة الإلكترونية من المنزل أو مقر العمل بكاميرا ويب وغرفة هادئة. ومركز الاختبار المعتمد خيار بديل وليس شرطًا."
+      },
+      {
+        "q": "هل يمكنني دفع رسوم الكورس بالجنيه المصري؟",
+        "a": "نعم. سعر الكورس محدّد بالجنيه المصري. أما رسوم امتحان NAHQ فهي دفعة منفصلة تُسدَّد إلى NAHQ بالدولار الأمريكي."
+      },
+      {
+        "q": "هل تشترط GAHAR الحصول على شهادة CPHQ؟",
+        "a": "لا. تعتمد GAHAR المنشآت لا الأفراد، ومن ثم لا توجد شهادة شخصية مطلوبة قانونًا. لكن عمليًا تسعى المنشآت المستعدة للتقييم بشكل متزايد إلى وجود كوادر معتمدة تدير هذا العمل."
+      },
+      {
+        "q": "هل أبدأ بـ EGYCAP أم بـ CPHQ؟",
+        "a": "إذا كان عملك بالكامل داخل المنظومة المصرية وتحتاج إلى قيمة فورية لدى جهة عملك، فإن EGYCAP أقرب لاحتياجك. أما إذا أردت شهادة تظل صالحة عند الانتقال إلى السعودية أو الإمارات، فابدأ بـ CPHQ."
+      },
+      {
+        "q": "هل أحتاج إلى مؤهل جامعي لأداء امتحان CPHQ؟",
+        "a": "لا. لا يوجد شرط تعليمي رسمي لشهادة CPHQ. المهم هو الخبرة العملية ذات الصلة بجودة الرعاية الصحية لا مؤهل بعينه."
+      },
+      {
+        "q": "هل الكورس بالعربية أم بالإنجليزية؟",
+        "a": "يغطي التدريس مصطلحات الامتحان بالإنجليزية، مع شرح ودعم متاحين بالعربية طوال البرنامج."
+      }
+    ],
+    "ctaHeading": "انضم إلى الدفعة القادمة من مصر",
+    "ctaBody": "عشرة أسابيع مباشرة أونلاين، بسعر بالجنيه المصري. اسألنا عن شروط التقديم أو الامتحان قبل أن تقرّر."
+  }
+}

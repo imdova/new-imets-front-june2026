@@ -201,6 +201,7 @@ function toFullUpdatePayload(d: CourseFormData): Record<string, unknown> {
     suppressBrandSuffix: d.suppressBrandSuffix,
     intakes: d.intakes,
     proof: d.proof,
+    instructorProfile: d.instructorProfile,
     instructorIds: d.instructorIds,
     modules: (d.modules ?? []).map((m) => ({
       titleAr: m.titleAr || m.titleEn,

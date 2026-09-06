@@ -70,6 +70,13 @@ export function toCoursePayload(v: CourseFormValues): CourseFormData {
       ...v.proof,
       passRateVerifiedAt: v.proof?.passRateVerifiedAt || undefined,
     },
+    // Blank entries are dropped so an untouched profile stays an empty object
+    // rather than a record full of empty strings.
+    instructorProfile: {
+      ...v.instructorProfile,
+      hospitals: (v.instructorProfile?.hospitals ?? []).filter((h) => !!h.trim()),
+      certifications: (v.instructorProfile?.certifications ?? []).filter((c) => !!c.trim()),
+    },
     textReviews: (v.textReviews ?? []).map((r) => ({
       ...r,
       datePublished: r.datePublished || undefined,

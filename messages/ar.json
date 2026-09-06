@@ -560,7 +560,24 @@
     "suppressBrandSuffix": "إخفاء لاحقة العلامة من عنوان الميتا",
     "suppressBrandSuffixHint": "يضيف الموقع «· IMETS Medical School».",
     "titleTooLong": "طويل جدًا — ستقتطعه محركات البحث.",
-    "withSuffix": "مع لاحقة العلامة"
+    "withSuffix": "مع لاحقة العلامة",
+    "secInstructor": "ملف المحاضر",
+    "secInstructorDesc": "من يقوم بتدريس هذا البرنامج. يظهر في صفحة الكورس العامة ويُنشر كبيانات منظمة من نوع Person.",
+    "instructorIntegrityHint": "كل ما يُدخَل هنا يُنشر كادعاء واقعي عن شخص حقيقي. أدخل فقط المؤهلات التي يحملها فعليًا — واترك الحقل فارغًا بدلًا من التقريب.",
+    "instructorName": "الاسم الكامل",
+    "instructorNamePlaceholder": "د. سارة أحمد",
+    "instructorNameRequired": "أضف اسم المحاضر قبل إدخال مؤهلاته.",
+    "instructorTitle": "المسمى المهني",
+    "instructorTitlePlaceholder": "مدير الجودة، مستشفيات جامعة القاهرة",
+    "instructorYears": "سنوات الخبرة",
+    "instructorLinkedIn": "رابط LinkedIn",
+    "instructorPhoto": "الصورة",
+    "instructorBio": "نبذة",
+    "instructorBioPlaceholder": "خلفيته المهنية وتخصصه وما يضيفه إلى هذا البرنامج.",
+    "instructorCertifications": "الشهادات المهنية",
+    "instructorHospitals": "جهات العمل / المستشفيات",
+    "instructorHospitalsPlaceholder": "كليفلاند كلينك أبوظبي",
+    "add": "إضافة"
   },
   "Pages": {
     "aboutTitle": "عن مدرسة IMETS الطبية",
@@ -957,8 +974,8 @@
     "footerPrivacyLink": "سياسة الخصوصية",
     "footerRefundLink": "سياسة الاسترداد",
     "catalogTitle": "دبلومات وبرامج شهادات الرعاية الصحية",
-    "catalogMetaTitle": "برامج دبلومات وشهادات الرعاية الصحية المباشرة | IMETS",
-    "catalogMetaDescription": "استكشف برامج الدبلومات والشهادات المباشرة في الرعاية الصحية من IMETS: إدارة المستشفيات، وجودة الرعاية، ومكافحة العدوى، والموارد البشرية، والتسويق — مع خبراء المجال.",
+    "catalogMetaTitle": "دبلومات وشهادات الرعاية الصحية | IMETS",
+    "catalogMetaDescription": "دبلومات مباشرة وتحضير للامتحانات في الرعاية الصحية: CPHQ وCIC والجودة ومكافحة العدوى وإدارة المستشفيات، على يد ممارسين في المجال.",
     "catalogBreadcrumb": "البرامج",
     "catalogSubtitle": "انضم إلى برامج دبلومة وشهادات مباشرة في الرعاية الصحية، مصمّمة للمهنيين والمستشفيات والعيادات والمنظمات الصحية في الشرق الأوسط. تعلّم من خبراء المجال عبر جلسات تفاعلية أونلاين.",
     "catalogTrustLabel": "موثوق به لدى فرق الرعاية الصحية في المنطقة",
@@ -1303,7 +1320,9 @@
     "footerColResources": "الموارد",
     "footerCertVerify": "التحقق من الشهادة",
     "footerResources": "الموارد",
-    "footerNews": "الأخبار"
+    "footerNews": "الأخبار",
+    "homeMetaTitle": "كورسات ودبلومات الرعاية الصحية أونلاين | IMETS",
+    "homeMetaDescription": "دبلومات وشهادات مباشرة أونلاين في الرعاية الصحية لمصر والخليج: CPHQ وCIC ومكافحة العدوى والجودة وإدارة المستشفيات، مع دعم بالعربية."
   },
   "Student": {
     "dashboardTitle": "تعلّمي",

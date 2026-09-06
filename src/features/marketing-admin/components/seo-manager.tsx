@@ -3,6 +3,7 @@
 import * as React from "react";
 import {
   LayoutGrid, SlidersHorizontal, FileText, Bot, Map, Braces, Shuffle, Eye, BarChart3, Globe, TriangleAlert,
+  Split,
 } from "lucide-react";
 
 import type {
@@ -18,13 +19,15 @@ import { SeoRobotsPanel } from "./seo-robots-panel";
 import { SeoRedirectsPanel } from "./seo-redirects-panel";
 import { SeoSchemaPanel } from "./seo-schema-panel";
 import { SeoPanelHead } from "./seo-panel-head";
+import { SeoCannibalisationPanel } from "./seo-cannibalisation-panel";
+import type { CannibalIssue } from "../lib/cannibalisation";
 import {
   SeoSitemapsPanel, SeoBacklinksPanel, SeoGscPanel, SeoGeoPanel, SeoBrokenUrlsPanel,
 } from "./seo-analytics-panels";
 
 type NavId =
   | "overview" | "settings" | "pages" | "robots" | "sitemaps" | "schema"
-  | "redirects" | "visibility" | "gsc" | "geo" | "errors";
+  | "redirects" | "cannibalisation" | "visibility" | "gsc" | "geo" | "errors";
 
 /** Sections whose header (breadcrumb + title + description) is rendered by the shell.
  * `overview`, `robots` and `sitemaps` render their own header/actions. */
@@ -33,6 +36,7 @@ const HEADS: Partial<Record<NavId, { crumb: string; title: string; description: 
   pages: { crumb: "Pages", title: "Public Pages", description: "Every public page with its SEO score, views and per-page meta controls — click a title to open its SEO editor." },
   schema: { crumb: "Schema", title: "Structured Data", description: "JSON-LD schema blocks and their validation health." },
   redirects: { crumb: "Redirections", title: "Managed Redirects", description: "301/302 redirects for moved or retired URLs." },
+  cannibalisation: { crumb: "Cannibalisation", title: "Keyword Cannibalisation", description: "Public URLs competing for the same primary keyword. Articles own informational phrasing; course pages own commercial phrasing." },
   visibility: { crumb: "Visibility", title: "Backlinks & Visibility", description: "Referring domains, anchors and link authority." },
   gsc: { crumb: "Google Search Console", title: "Search Console", description: "Clicks, impressions and query performance." },
   geo: { crumb: "Generative Engine Optimization", title: "AI Answer Engines", description: "Track how often your site is cited by AI answer engines." },
@@ -47,6 +51,7 @@ const NAV: { id: NavId; label: string; icon: React.ElementType }[] = [
   { id: "sitemaps", label: "Sitemaps", icon: Map },
   { id: "schema", label: "Schema", icon: Braces },
   { id: "redirects", label: "Redirections", icon: Shuffle },
+  { id: "cannibalisation", label: "Cannibalisation", icon: Split },
   { id: "visibility", label: "Visibility", icon: Eye },
   { id: "gsc", label: "GSC", icon: BarChart3 },
   { id: "geo", label: "GEO", icon: Globe },
@@ -54,7 +59,7 @@ const NAV: { id: NavId; label: string; icon: React.ElementType }[] = [
 ];
 
 export function SeoManager({
-  overview, settings, publicPages, redirects, schemas, schemaSummary,
+  overview, settings, publicPages, redirects, schemas, schemaSummary, cannibalIssues,
 }: {
   overview: SeoOverview;
   settings: SeoSettings;
@@ -62,6 +67,7 @@ export function SeoManager({
   redirects: SeoRedirect[];
   schemas: SeoSchema[];
   schemaSummary: SchemaSummary;
+  cannibalIssues: CannibalIssue[];
 }) {
   const [active, setActive] = React.useState<NavId>("overview");
   const head = HEADS[active];
@@ -102,6 +108,7 @@ export function SeoManager({
         {active === "sitemaps" && <SeoSitemapsPanel />}
         {active === "schema" && <SeoSchemaPanel initial={schemas} initialSummary={schemaSummary} />}
         {active === "redirects" && <SeoRedirectsPanel initial={redirects} />}
+        {active === "cannibalisation" && <SeoCannibalisationPanel issues={cannibalIssues} />}
         {active === "visibility" && <SeoBacklinksPanel />}
         {active === "gsc" && <SeoGscPanel />}
         {active === "geo" && <SeoGeoPanel />}

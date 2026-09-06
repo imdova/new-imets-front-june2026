@@ -58,6 +58,18 @@ export interface CourseIntake {
 }
 
 /** Verifiable outcome claims. A pass rate requires its basis. */
+/** Public course-page instructor block (see `instructorProfileSchema`). */
+export interface CourseInstructorProfile {
+  name: string;
+  title: string;
+  image: string;
+  bio: string;
+  yearsExperience: number;
+  hospitals: string[];
+  certifications: string[];
+  linkedIn: string;
+}
+
 export interface CourseProof {
   passRate: number;
   passRateBasisEn: string;
@@ -207,6 +219,7 @@ export interface CourseFormData {
   suppressBrandSuffix?: boolean;
   intakes?: CourseIntake[];
   proof?: CourseProof;
+  instructorProfile: CourseInstructorProfile;
   instructorIds: string[];
   variables: Record<string, string | string[]>;
   courseVariables?: Record<string, string | string[]>; // UI helper

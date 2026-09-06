@@ -5,7 +5,7 @@ import { setRequestLocale } from "next-intl/server";
 
 import { Link } from "@/i18n/navigation";
 import { dal } from "@/lib/dal";
-import { staticPageMeta } from "@/lib/seo";
+import { staticPageMeta, SITE_NAME } from "@/lib/seo";
 import { ArticleCard } from "@/features/blog/components/article-card";
 
 const COLOR_WASH: Record<string, string> = {
@@ -20,7 +20,22 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale, slug } = await params;
   const res = await dal.blog.fetchCategoryLanding(slug);
-  if (!res.ok) return {};
+  /*
+   * A transient API failure used to return `{}` here, which ships a page with
+   * no title and no description at all — worse than an imperfect one, and
+   * invisible until you crawl for it (the site-wide audit caught five such
+   * pages in a single pass, all of which title correctly on a retry). Fall back
+   * to something derived from the slug instead.
+   */
+  if (!res.ok) {
+    const readable = slug.replace(/-/g, " ").replace(/\w/g, (m) => m.toUpperCase());
+    return staticPageMeta({
+      title: `${readable} articles`,
+      description: `Articles on ${readable.toLowerCase()} from ${SITE_NAME}.`,
+      path: `/blog/category/${slug}`,
+      locale,
+    });
+  }
   const c = res.data.category;
   return staticPageMeta({
     title: c.seoTitle || `${c.name} articles`,

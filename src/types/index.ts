@@ -61,6 +61,21 @@ export interface CategoryLookup extends LookupItem {
 export interface InstructorLookup extends LookupItem {
   avatarUrl?: string;
   title?: string;
+  /*
+   * Public-profile fields, for `/instructors/[slug]` and the Person schema it
+   * emits. Every one is optional and every one renders only when filled — the
+   * profile page must never assert a credential, an affiliation or a number of
+   * years that is not stored against this person.
+   */
+  bio?: string;
+  specialty?: string;
+  yearsOfExperience?: number;
+  /** Certificate names or codes as entered by the admin. */
+  certificates?: string[];
+  country?: string;
+  website?: string;
+  /** Social profiles, e.g. `{ key: "LinkedIn", value: "https://..." }`. */
+  socialLinks?: { key: string; value: string }[];
 }
 
 /** A course row as rendered in the admin courses DataTable. */
@@ -221,6 +236,8 @@ export interface CourseRow {
   modules?: CurriculumModule[];
   /** Instructor display names (for smart catalog search). */
   instructorNames?: string[];
+  /** Ids of the faculty assigned to this course — links a profile page to it. */
+  instructorIds?: string[];
   /** Tag labels (for smart catalog search). */
   tagLabels?: string[];
   /** Program duration label from the backend (e.g. "8 weeks"). */
