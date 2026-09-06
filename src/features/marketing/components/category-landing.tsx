@@ -42,14 +42,33 @@ export function CategoryLanding({
 
   const students = courses.reduce((s, c) => s + (c.students || 0), 0);
   const rated = courses.filter((c) => c.rating > 0);
-  const avgRating = rated.length ? rated.reduce((s, c) => s + c.rating, 0) / rated.length : 4.9;
   const catUrl = localeUrl(`/category/${category.slug}`, locale);
 
+  /*
+   * Every number here has to come from stored data.
+   *
+   * This strip used to end `: 4.9` — with no rated course in the category, the
+   * page displayed "4.9 Avg rating" out of thin air, the same fabrication that
+   * was removed from the course pages. It sat beside a hardcoded "100%
+   * Certified", which asserted nothing checkable at all.
+   *
+   * The rating stat now only appears when a course in this category actually
+   * carries a rating, and the certified claim is replaced by the delivery mode,
+   * which is true and already stated in the FAQ below.
+   */
   const stats = [
     { icon: BookOpen, value: `${courses.length}`, label: tr("Programs", "برنامج") },
-    { icon: Users, value: `${compact(students)}+`, label: tr("Learners", "متعلم") },
-    { icon: Star, value: avgRating.toFixed(1), label: tr("Avg rating", "متوسط التقييم") },
-    { icon: BadgeCheck, value: "100%", label: tr("Certified", "معتمد") },
+    ...(students > 0
+      ? [{ icon: Users, value: `${compact(students)}+`, label: tr("Learners", "متعلم") }]
+      : []),
+    ...(rated.length
+      ? [{
+          icon: Star,
+          value: (rated.reduce((s, c) => s + c.rating, 0) / rated.length).toFixed(1),
+          label: tr("Avg rating", "متوسط التقييم"),
+        }]
+      : []),
+    { icon: BadgeCheck, value: "100%", label: tr("Online", "أونلاين") },
   ];
 
   const whyItems = [

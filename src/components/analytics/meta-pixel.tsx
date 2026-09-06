@@ -72,6 +72,7 @@ evts.forEach(function(e){window.addEventListener(e,first,{once:true,passive:true
           style={{ display: "none" }}
           src={`https://www.facebook.com/tr?id=${PIXEL_ID}&ev=PageView&noscript=1`}
           alt=""
+          aria-hidden="true"
         />
       </noscript>
     </>

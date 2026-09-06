@@ -117,10 +117,10 @@ export async function MarketingHero({ stats, videoId = "R9-6cBqzczo" }: Marketin
               </div>
 
               <div className="flex min-w-0 flex-col gap-0.5 text-center sm:text-start">
-                <span className="inline-flex items-center justify-center gap-1 text-sm font-bold text-white sm:justify-start">
-                  <Star className="size-3.5 fill-[#f4c430] text-[#f4c430]" />
-                  {t("heroRating")}
-                </span>
+                {/* The star rating that sat here was unsourced — see the stats
+                    array in the home page. The learner count beside it is a
+                    real business figure, so the badge keeps that and drops the
+                    number nobody can vouch for. */}
                 <p className="text-xs font-medium leading-snug text-white/85 sm:text-sm">
                   {t("heroSocialProof")}
                 </p>

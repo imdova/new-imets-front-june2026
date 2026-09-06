@@ -15,7 +15,29 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "Marketing" });
-  return staticPageMeta({ title: t("instructorsHeroTitle"), description: t("instructorsHeroSubtitle"), path: "/instructors", locale });
+  const meta = await staticPageMeta({
+    title: t("instructorsHeroTitle"),
+    description: t("instructorsHeroSubtitle"),
+    path: "/instructors",
+    locale,
+  });
+
+  /*
+   * With no faculty records stored, this page is ~160 words of boilerplate with
+   * no names, no profiles and nothing to link to. Asking Google to index that
+   * spends crawl budget to publish a page that can only disappoint — a thin
+   * page is a liability to the whole site, not just to itself.
+   *
+   * So it de-indexes itself while the roster is empty, and starts indexing
+   * again the moment a single instructor exists. `follow` stays on so the
+   * crawler still walks through to whatever it does link to.
+   *
+   * The sitemap makes the matching decision from the same condition — see
+   * `collectSitemapRows` in lib/sitemap-data.ts.
+   */
+  const res = await dal.lookups.fetchInstructors().catch(() => null);
+  const isEmpty = !res?.ok || res.data.length === 0;
+  return isEmpty ? { ...meta, robots: { index: false, follow: true } } : meta;
 }
 
 export default async function InstructorsPage({

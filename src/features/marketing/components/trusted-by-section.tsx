@@ -45,12 +45,12 @@ const TRUST_GROUPS = [
 ] as const;
 
 /** Headline proof numbers. */
+/* "4.9★" removed — no consented review is stored anywhere to average. */
 const STATS = [
   { value: "18,000+", key: "trustedStatPros" },
   { value: "15+", key: "trustedStatCountries" },
   { value: "38+", key: "trustedStatFaculty" },
   { value: "64+", key: "trustedStatPrograms" },
-  { value: "4.9★", key: "trustedStatSatisfaction" },
 ] as const;
 
 /**

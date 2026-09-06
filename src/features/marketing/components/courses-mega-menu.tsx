@@ -202,10 +202,17 @@ export function CoursesMegaMenu({
                           className="group flex h-full flex-col overflow-hidden rounded-xl border border-border/60 bg-card transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-lg"
                         >
                           <span className="relative block aspect-video overflow-hidden bg-muted">
+                            {/* Decorative: this link already announces the
+                                course title below, so alt text here would make
+                                a screen reader read the same course twice.
+                                aria-hidden makes that intent explicit rather
+                                than leaving an empty alt to be read as an
+                                oversight. */}
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
                               src={c.thumbnailUrl}
                               alt=""
+                              aria-hidden="true"
                               loading="lazy"
                               decoding="async"
                               className="size-full object-cover transition-transform duration-300 group-hover:scale-105"

@@ -66,6 +66,7 @@ export function ArticleByline({
         <Image
           src={author.avatarUrl}
           alt=""
+          aria-hidden="true"
           width={28}
           height={28}
           className="size-7 rounded-full object-cover"

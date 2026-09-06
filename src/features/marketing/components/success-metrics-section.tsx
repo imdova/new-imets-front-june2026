@@ -1,11 +1,21 @@
 import { getTranslations } from "next-intl/server";
 
+/*
+ * The "4.9" rating was removed: the platform stores zero consented reviews, so
+ * there is no rating to average. Displaying one is the same fabrication that
+ * was stripped from the course and category pages, and a star figure nobody
+ * gave is the kind of claim that costs more than it earns.
+ *
+ * The remaining figures are institution-wide business numbers that only the
+ * school can verify. `metricPassRate` in particular asserts an outcome — the
+ * backend already refuses to publish a course pass rate without a stored basis
+ * (see CoursesService.validateClaims); this one is not held to that yet.
+ */
 const METRICS = [
   { value: "18,000+", labelKey: "metricProfessionals" },
   { value: "92%", labelKey: "metricPassRate" },
   { value: "50+", labelKey: "metricNationalities" },
   { value: "15+", labelKey: "metricCountries" },
-  { value: "4.9", labelKey: "metricRating" },
   { value: "120+", labelKey: "metricClients" },
 ] as const;
 

@@ -33,7 +33,6 @@ const STATIC_PATHS = [
   "/",
   "/courses",
   "/free-courses",
-  "/instructors",
   "/about",
   "/become-instructor",
   "/contact",
@@ -154,7 +153,23 @@ export async function collectSitemapRows(): Promise<{
   }));
 
   if (catsRes?.ok) for (const c of catsRes.data) pages.push({ path: `/category/${c.slug || c.id}` });
-  if (instRes?.ok) for (const i of instRes.data) pages.push({ path: `/instructors/${i.slug || i.id}` });
+
+  /*
+   * `/instructors` is submitted only once there is a faculty roster to show.
+   *
+   * With zero instructor records — which is the state today — the page renders
+   * ~160 words of boilerplate with no names, no profiles and nothing to link
+   * to. Submitting that asks Google to index a thin page, and thin pages are
+   * judged against the site rather than in isolation. The page de-indexes
+   * itself under the same condition (see the instructors route's
+   * `generateMetadata`), so the two stay in step.
+   *
+   * Both reverse automatically the moment one instructor exists.
+   */
+  if (instRes?.ok && instRes.data.length > 0) {
+    pages.push({ path: "/instructors" });
+    for (const i of instRes.data) pages.push({ path: `/instructors/${i.slug || i.id}` });
+  }
   if (blogCatsRes?.ok) for (const c of blogCatsRes.data) if (c.slug) pages.push({ path: `/blog/category/${c.slug}` });
 
   /*

@@ -146,6 +146,7 @@ export default async function InstructorDetailPage({
           <Image
             src={instructor.avatarUrl}
             alt=""
+            aria-hidden="true"
             width={96}
             height={96}
             className="size-24 rounded-full border-2 border-background object-cover shadow-md"

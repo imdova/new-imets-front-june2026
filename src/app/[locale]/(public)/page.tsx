@@ -1,7 +1,6 @@
 import {
   ArrowRight,
   GraduationCap,
-  Star,
   Users,
   BookOpen,
   Globe2,
@@ -80,9 +79,12 @@ export default async function HomePage({
   // Home "Featured Healthcare Programs" should show more options.
   const courses = (coursesRes.ok ? coursesRes.data : []).slice(0, 8);
 
+  // The "4.9 Student Satisfaction" stat is gone: the platform stores no
+  // consented review anywhere, so there is nothing to average and nothing to
+  // point an auditor at. Same reason it was removed from the course, category
+  // and trusted-by strips.
   const stats = [
     { value: "18,000+", label: t("heroStat1"), icon: Users },
-    { value: "4.9", label: t("heroStat2"), icon: Star, rating: true },
     { value: "15+", label: t("heroStat3"), icon: Globe2 },
     { value: "38+", label: t("heroStat4"), icon: GraduationCap },
     { value: "64+", label: t("heroStat5"), icon: BookOpen },
