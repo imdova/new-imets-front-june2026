@@ -122,7 +122,7 @@ export function organizationLd(opts?: {
   return {
     "@context": "https://schema.org",
     "@type": "EducationalOrganization",
-    "@id": `${SITE_URL}/#organization`,
+    "@id": ORGANIZATION_ID,
     name: SITE_NAME,
     url: SITE_URL,
     logo: SITE_LOGO,
@@ -201,6 +201,36 @@ export function personLd(opts: {
     worksFor: { "@type": "EducationalOrganization", name: SITE_NAME, sameAs: SITE_URL },
     inLanguage: opts.locale,
   };
+}
+
+/**
+ * The `@id` of the EducationalOrganization node emitted once per page by the
+ * public layout (`organizationLd`). Other nodes reference it instead of
+ * repeating the organization inline, so everything resolves to one entity.
+ */
+export const ORGANIZATION_ID = `${SITE_URL}/#organization`;
+
+/**
+ * How long a promotional price is advertised as valid, for `Offer.priceValidUntil`.
+ *
+ * ⚠️ ROLL THIS when the promotion changes or the year turns. An offer whose
+ * `priceValidUntil` is in the past is treated as expired and silently drops out
+ * of eligibility — hence `offerPriceValidUntil()` below, which refuses to emit
+ * a stale date rather than shipping one.
+ */
+export const OFFER_PRICE_VALID_UNTIL = "2026-12-31";
+
+/**
+ * The advertised end of the current promotion, or `undefined` once it has passed.
+ *
+ * Omitting the property is strictly better than emitting an expired one: without
+ * it the offer stays valid indefinitely, with it the offer is disqualified. If
+ * this starts returning `undefined`, the constant above needs rolling.
+ */
+export function offerPriceValidUntil(): string | undefined {
+  const until = new Date(`${OFFER_PRICE_VALID_UNTIL}T23:59:59Z`);
+  if (Number.isNaN(until.getTime()) || until.getTime() < Date.now()) return undefined;
+  return OFFER_PRICE_VALID_UNTIL;
 }
 
 /** One scheduled cohort, as stored on the course record. */
@@ -330,7 +360,9 @@ export function courseLd(opts: {
     ...(teaches.length ? { teaches } : {}),
     ...(opts.audience ? { audience: { "@type": "Audience", audienceType: opts.audience } } : {}),
     ...(availableLanguage.length ? { availableLanguage } : {}),
-    provider: { "@type": "EducationalOrganization", name: SITE_NAME, sameAs: SITE_URL },
+    // Reference the organization node emitted once in the public layout rather
+    // than repeating it inline, so both resolve to the same entity.
+    provider: { "@id": ORGANIZATION_ID },
 
     ...(future.length
       ? {
@@ -355,6 +387,10 @@ export function courseLd(opts: {
                 }
               : {}),
             location: { "@type": "VirtualLocation", url: opts.url },
+            ...(availableLanguage.length ? { inLanguage: availableLanguage } : {}),
+            // The instance is what a buyer actually purchases, so it carries the
+            // same multi-currency offers as the course.
+            ...(offerNodes.length ? { offers: offerNodes } : {}),
             ...(instructors.length
               ? {
                   instructor: instructors.map((p) => ({

@@ -66,6 +66,7 @@ import {
   courseVideoLd,
   breadcrumbLd,
   isoWeeks,
+  offerPriceValidUntil,
 } from "@/lib/seo";
 import { mergeSeo } from "@/lib/public-seo";
 
@@ -233,7 +234,10 @@ export default async function CourseDetailPage({
    * A discounted offer carries `priceValidUntil` — a promotional price with no
    * end date reads as the permanent price.
    */
-  const priceValidUntil = onSale ? `${new Date().getFullYear()}-12-31` : undefined;
+  // Single source of truth in lib/seo (OFFER_PRICE_VALID_UNTIL); returns
+  // undefined once the promotion date has passed, so a stale constant omits the
+  // property instead of shipping an expired one that disqualifies the offer.
+  const priceValidUntil = onSale ? offerPriceValidUntil() : undefined;
   const offerPrices = (
     [
       { list: course.priceEGP, sale: course.salePriceEGP, currency: "EGP" },
