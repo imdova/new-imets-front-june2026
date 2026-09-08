@@ -19,6 +19,8 @@ import { ArticleByline, type ArticleAuthor } from "@/features/blog/components/ar
 import { courseAnchorText } from "@/features/blog/lib/course-anchors";
 import { splitAtSecondHeading } from "@/features/blog/lib/split-sections";
 import { revisionDate } from "@/features/blog/lib/revision-date";
+import { relatedPosts } from "@/features/blog/lib/related-posts";
+import { RelatedArticles } from "@/features/blog/components/related-articles";
 
 // Memoize per request so generateMetadata + the page share one fetch
 // (the backend increments `views` on read — we want exactly one increment).
@@ -29,18 +31,47 @@ export async function generateMetadata({
 }: {
   params: Promise<{ locale: string; slug: string }>;
 }): Promise<Metadata> {
-  const { locale, slug } = await params;
+  // `locale` is deliberately unused: an article's metadata is the same on
+  // /blog/<slug> and /ar/blog/<slug>, because the canonical below points both
+  // at the locale the article is actually written in.
+  const { slug } = await params;
   const res = await getArticle(slug);
   if (!res.ok) return {};
   const post = res.data;
   const title = post.seoTitle || post.title;
   const description = post.seoDescription || metaDescription(post.excerpt, title);
-  const url = localeUrl(`/blog/${post.slug}`, locale);
   const ogImage = post.coverImageUrl || `${SITE_URL}/blog/${post.slug}/og`;
+
+  /*
+   * Blog routes emitted a bare self-canonical and no hreflang at all, unlike
+   * every course and category route.
+   *
+   * The naive fix — copy `seoAlternates` and emit en/ar/x-default — would be
+   * wrong here. Course pages genuinely exist in both locales; articles do not.
+   * All 48 are `language: "en"`, and `/ar/blog/<slug>` serves that same English
+   * text. Declaring an `ar` alternate would advertise a translation that does
+   * not exist, and Google would find the English article again.
+   *
+   * So the article's own language decides: the canonical always points at the
+   * URL for the locale the article is actually written in, which makes
+   * `/ar/blog/<slug>` consolidate into `/blog/<slug>` instead of competing with
+   * it as a duplicate. `languages` lists only locales the article exists in —
+   * one entry today, and automatically two once a translated post is stored.
+   */
+  const postLocale = post.language === "ar" ? "ar" : "en";
+  const canonical = localeUrl(`/blog/${post.slug}`, postLocale);
+  const url = canonical;
+
   return {
     title,
     description,
-    alternates: { canonical: url },
+    alternates: {
+      canonical,
+      languages: {
+        [postLocale]: canonical,
+        "x-default": canonical,
+      },
+    },
     openGraph: { type: "article", title, description, url, images: [ogImage], publishedTime: post.publishedAt },
     twitter: { card: "summary_large_image", title, description, images: [ogImage] },
   };
@@ -166,6 +197,13 @@ export default async function ArticleDetailPage({
    * second exact-match title link further down.
    */
   const [primaryCourse, ...secondaryCourses] = related;
+
+  /*
+   * Sibling articles. One list fetch, already public + ISR-cached and shared
+   * with the course pages, so this costs no extra round-trip per slug.
+   */
+  const allPostsRes = await dal.blog.fetchPublicArticles({ limit: 200 });
+  const siblings = relatedPosts(post, allPostsRes.ok ? allPostsRes.data.data : []);
 
   /*
    * Insert the callout after the first major section. A link parked under the
@@ -300,6 +338,7 @@ export default async function ArticleDetailPage({
           </ul>
         </section>
       )}
+      <RelatedArticles posts={siblings} locale={locale} />
     </article>
   );
 }

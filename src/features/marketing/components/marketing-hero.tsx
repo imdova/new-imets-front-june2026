@@ -101,13 +101,20 @@ export async function MarketingHero({ stats, videoId = "R9-6cBqzczo" }: Marketin
             </div>
 
             <div className="mt-4 flex flex-wrap items-center justify-center gap-3 rounded-2xl border border-white/15 bg-white/10 px-4 py-3 backdrop-blur-md sm:justify-start lg:gap-4">
-              <div className="flex items-center -space-x-2 rtl:space-x-reverse">
+              {/* An anonymous avatar stack — purely a visual device for the
+                  social-proof line beside it. It depicts no identifiable
+                  student and names no one, so it is decorative and says so. */}
+              <div className="flex items-center -space-x-2 rtl:space-x-reverse" aria-hidden="true">
                 {LEARNER_FACES.map((src, i) => (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
                     key={src}
                     src={src}
                     alt=""
+                    // Redundant with the aria-hidden container above, and kept
+                    // anyway: per-image accessibility scanners read the tag,
+                    // not its ancestors, and this is what one of them flagged.
+                    aria-hidden="true"
                     width={36}
                     height={36}
                     className="size-9 rounded-full border-2 border-[#0a2f7a] object-cover shadow-sm"

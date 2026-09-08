@@ -127,11 +127,16 @@ export async function TrustedBySection() {
                     >
                       {image ? (
                         <div className="relative aspect-[16/10] w-full bg-slate-50">
-                          {/* Decorative: the name is already announced by the
-                              <p> below, so alt text here would repeat it. */}
+                          {/* Decorative: the organisation's name renders as
+                              text in the <p> directly below, so alt text here
+                              would make a screen reader announce it twice.
+                              aria-hidden states that intent — without it an
+                              empty alt reads as an omission, which is how an
+                              audit reported these eleven logos. */}
                           <Image
                             src={image.src}
                             alt=""
+                            aria-hidden="true"
                             fill
                             sizes="(max-width: 1024px) 50vw, 200px"
                             className={
