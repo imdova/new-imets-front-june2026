@@ -7,8 +7,6 @@ import {
   PlayCircle,
   Globe,
   CalendarDays,
-  Award,
-  Infinity as InfinityIcon,
   ChevronRight,
   Star,
   CheckCircle2,
@@ -114,12 +112,23 @@ export async function generateMetadata({
   const keywords = (ar ? seo?.metaKeywordsAr : seo?.metaKeywordsEn) ?? [];
   const path = `/courses/${slug}`;
   return mergeSeo(path, {
-    // Absolute (i.e. the layout's `%s · IMETS Medical School` template is
-    // skipped) in two cases: the winning title already carries the school name,
-    // so the template can't double it; or the course opted out of the suffix
-    // because the composed title would otherwise truncate in the SERP.
+    /*
+     * An authored meta title is the complete SERP title, not a fragment to
+     * suffix.
+     *
+     * The layout template appends " · IMETS Medical School" — 23 characters.
+     * On top of an authored 58-character title that is 81, and Google truncates
+     * around 60, so the tail that got cut was the brand the suffix existed to
+     * add. Nine of the ten course pages were over the limit for exactly this
+     * reason, in both locales, despite every stored title being a sensible
+     * length on its own.
+     *
+     * So: authored (admin panel or bundled content) ⇒ absolute, because whoever
+     * wrote it was writing the whole title. Nothing authored ⇒ the fallback is
+     * just the course name, which genuinely does want the brand appended.
+     */
     title:
-      course.suppressBrandSuffix || (!adminTitle && bundledTitle)
+      adminTitle || bundledTitle || course.suppressBrandSuffix
         ? { absolute: title }
         : title,
     description,

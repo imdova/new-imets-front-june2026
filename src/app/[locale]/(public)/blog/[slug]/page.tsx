@@ -87,8 +87,18 @@ export default async function ArticleDetailPage({
     description: post.excerpt,
     image: post.coverImageUrl || `${SITE_URL}/blog/${post.slug}/og`,
     datePublished: post.publishedAt,
-    // Absent unless the article was genuinely revised — see `revision-date.ts`.
-    dateModified: revisionDate(post.publishedAt, post.updatedAt),
+    /*
+     * `dateModified` is "most recently modified", and for an article published
+     * and never touched again that is its publication date — so this emits the
+     * stored value rather than omitting the field. That only became honest once
+     * `updatedAt` stopped being bumped by page views and the 48 posts were
+     * backfilled; see `revision-date.ts` for that history.
+     *
+     * The *visible* "last updated" line stays gated behind `revisionDate()`:
+     * structured data wants the true timestamp, but telling a reader a page was
+     * updated on the day it was published is noise.
+     */
+    dateModified: post.updatedAt || post.publishedAt,
     inLanguage: post.language || locale,
     keywords: post.tags?.length ? post.tags.join(", ") : undefined,
     articleSection: post.category || undefined,
@@ -105,7 +115,12 @@ export default async function ArticleDetailPage({
      */
     author: author
       ? personRef(localeUrl(author.profilePath!, locale))
-      : { "@type": "Organization", name: post.authorName || SITE_NAME },
+      // The school itself: reference the organization node the layout already
+      // emits rather than inlining a second Organization with the same name,
+      // which would split one entity into two in the graph.
+      : !post.authorName || post.authorName === SITE_NAME
+        ? { "@id": ORGANIZATION_ID }
+        : { "@type": "Organization", name: post.authorName },
     publisher: { "@id": ORGANIZATION_ID },
     mainEntityOfPage: localeUrl(`/blog/${post.slug}`, locale),
   };

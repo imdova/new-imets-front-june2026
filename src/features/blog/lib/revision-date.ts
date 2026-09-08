@@ -17,16 +17,17 @@
  * timestamp from a genuine recent edit, so until the stored values are
  * corrected there is no honest revision date to publish, and we publish none.
  *
- * ── To turn this back on ───────────────────────────────────────────────────
- *   1. Deploy the backend fix, so reads stop bumping `updatedAt`.
- *   2. Backfill once: set `updatedAt = publishedAt` on every post, resetting
- *      the baseline to something true.
- *   3. Flip REVISION_DATES_TRUSTWORTHY to true here.
- * After that an unedited post has `updatedAt == publishedAt` and reports no
- * revision date, while a genuinely edited one reports the date it was edited —
- * which is what every consumer of this field already assumed it meant.
+ * ── Both remediation steps are done (2026-09-08) ───────────────────────────
+ *   1. Backend fix deployed — `blog.service.ts` passes `timestamps: false` when
+ *      incrementing views. Confirmed over two days of live traffic: not one
+ *      `updatedAt` moved, where previously every read moved one.
+ *   2. Backfilled — `updatedAt = publishedAt` on all 48 posts, resetting the
+ *      baseline to something true.
+ * So an unedited post now has `updatedAt == publishedAt` and reports no
+ * revision date, while a genuinely edited one reports the date it was edited,
+ * which is what every consumer of this field always assumed it meant.
  */
-export const REVISION_DATES_TRUSTWORTHY = false;
+export const REVISION_DATES_TRUSTWORTHY = true;
 
 /** A revision counts only if it landed at least this long after publication. */
 const MIN_GAP_MS = 24 * 60 * 60 * 1000;

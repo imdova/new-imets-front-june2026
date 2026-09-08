@@ -62,6 +62,15 @@ export function ArticleByline({
 
   const identity = (
     <span className="inline-flex items-center gap-2">
+      {/*
+        The avatar represents a person, so it is drawn only when there is one.
+        Falling back to the organisation used to render an initials disc reading
+        "IM" directly before the name — "IM" + "IMETS Medical School", which any
+        text extraction reads as "IMIMETS Medical School", and which is how an
+        SEO crawl reported this byline. aria-hidden would have hidden that from
+        a screen reader while leaving it in the text; not drawing it is the
+        actual fix, and the disc was adding nothing for an organisation anyway.
+      */}
       {author?.avatarUrl ? (
         <Image
           src={author.avatarUrl}
@@ -71,11 +80,14 @@ export function ArticleByline({
           height={28}
           className="size-7 rounded-full object-cover"
         />
-      ) : (
-        <span className="grid size-7 place-items-center rounded-full bg-primary/15 text-xs font-bold text-primary">
+      ) : author ? (
+        <span
+          aria-hidden="true"
+          className="grid size-7 place-items-center rounded-full bg-primary/15 text-xs font-bold text-primary"
+        >
           {getInitials(name)}
         </span>
-      )}
+      ) : null}
       <span className="font-medium text-foreground">{name}</span>
       {author?.credentials && (
         <span className="text-muted-foreground">{author.credentials}</span>
@@ -96,7 +108,9 @@ export function ArticleByline({
       {publishedAt && (
         <span className="inline-flex items-center gap-1.5">
           <CalendarDays className="size-4" />
-          {fmt(publishedAt, locale)}
+          {/* Machine-readable, so the rendered date and `datePublished` in the
+              structured data can be checked against each other. */}
+          <time dateTime={publishedAt}>{fmt(publishedAt, locale)}</time>
         </span>
       )}
 
