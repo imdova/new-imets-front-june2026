@@ -389,6 +389,21 @@ export const ADMIN_NAV: NavSection[] = [
     ],
   },
   {
+    /*
+     * Onboarding, deliberately ungated. Every person who answers a customer
+     * needs it on their first day, and that includes staff whose permission map
+     * grants them almost nothing else yet.
+     */
+    labelKey: "sectionOrientation",
+    items: [
+      {
+        titleKey: "salesOrientation",
+        href: "/admin/orientation",
+        icon: "GraduationCap",
+      },
+    ],
+  },
+  {
     labelKey: "sectionAccount",
     items: [{ titleKey: "profile", href: "/admin/profile", icon: "UserCog" }],
   },

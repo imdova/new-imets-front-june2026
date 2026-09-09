@@ -171,7 +171,10 @@
     "seoManager": "SEO Manager",
     "studentReviews": "Student Reviews",
     "platformMarketing": "Platform Marketing",
-    "navPartnership": "Partnership"
+    "navPartnership": "Partnership",
+    "sectionOrientation": "Orientation",
+    "salesOrientation": "Sales Orientation",
+    "salesOrientationDesc": "Day-one conversation training for the sales team — the path, the four rules, and practice on real enquiries."
   },
   "Header": {
     "newCourse": "New Course",

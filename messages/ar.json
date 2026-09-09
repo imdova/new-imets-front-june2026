@@ -171,7 +171,10 @@
     "seoManager": "مدير تحسين محركات البحث",
     "studentReviews": "آراء الطلاب",
     "platformMarketing": "تسويق المنصة",
-    "navPartnership": "الشراكات"
+    "navPartnership": "الشراكات",
+    "sectionOrientation": "التدريب",
+    "salesOrientation": "تدريب المبيعات",
+    "salesOrientationDesc": "تدريب اليوم الأول على المحادثة مع العميل — المسار، والقواعد الأربع، وتدريب على استفسارات حقيقية."
   },
   "Header": {
     "newCourse": "دورة جديدة",
