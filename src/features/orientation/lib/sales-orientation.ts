@@ -66,6 +66,27 @@ export interface Scenario {
   options: ScenarioOption[];
 }
 
+export interface ObjectionMethodStep {
+  n: string;
+  title: string;
+  body: string;
+}
+
+export interface Objection {
+  /** One of five buckets, used as the bank's filter. */
+  category: string;
+  objection: string;
+  /** What the customer is really worried about underneath it. */
+  behind: string;
+  /** The weak reply — usually over-promising or dismissing a competitor. */
+  wrong: string;
+  right: string;
+  /** Policy points that can be stated without checking with anyone. */
+  facts: string[];
+  /** The question that moves the conversation on. */
+  next: string;
+}
+
 export interface SalesOrientation {
   threads: { bad: Thread; good: Thread };
   steps: PathStep[];
@@ -74,6 +95,13 @@ export interface SalesOrientation {
   phraseBank: { risky: string; safe: string }[];
   closings: { situation: string; text: string }[];
   checklist: { question: string; hint: string }[];
+  objectionMethod: {
+    intro: string;
+    steps: ObjectionMethodStep[];
+    /** Isolate the objection before answering it. */
+    isolate: string;
+  };
+  objections: Objection[];
 }
 
 export const SALES_ORIENTATION = content as SalesOrientation;
@@ -120,6 +148,14 @@ export const ORIENTATION_LESSONS = [
     heading: "تدريب: اختار الرد الأنسب",
     intro:
       "ستة مواقف حقيقية بتيجيلنا كل أسبوع. اختار ردًا واحدًا في كل موقف، وهيوصلك تعليق يوضح القاعدة اللي اتطبّقت.",
+  },
+  {
+    id: "objections",
+    short: "بنك الاعتراضات",
+    en: "Objection bank",
+    heading: "منهج التعامل مع الاعتراض وبنك الاعتراضات",
+    intro:
+      "أربعتاشر اعتراضًا حقيقيًا على برامج IMETS، وكل واحد فيه: اللي وراه، الرد الضعيف، الرد النموذجي، والحقائق اللي تقدر تقولها من غير خوف.",
   },
   {
     id: "phrases",

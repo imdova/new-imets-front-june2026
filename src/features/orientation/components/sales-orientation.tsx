@@ -27,6 +27,7 @@ import {
   PracticeModule,
   RulesModule,
 } from "./orientation-modules";
+import { ObjectionsModule } from "./objections-module";
 
 /**
  * Sales orientation, as a course rather than a document.
@@ -269,6 +270,13 @@ export function SalesOrientation() {
     rules: <RulesModule rules={SALES_ORIENTATION.rules} onComplete={completeCurrent} />,
     practice: (
       <PracticeModule scenarios={SALES_ORIENTATION.scenarios} onComplete={completeCurrent} />
+    ),
+    objections: (
+      <ObjectionsModule
+        method={SALES_ORIENTATION.objectionMethod}
+        objections={SALES_ORIENTATION.objections}
+        onComplete={completeCurrent}
+      />
     ),
     phrases: (
       <PhraseBankModule phrases={SALES_ORIENTATION.phraseBank} onComplete={completeCurrent} />
