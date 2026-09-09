@@ -699,5 +699,47 @@
       ],
       "next": "تحب أحوّلك لقسم التسجيل يبعتلك الفاتورة المبدئية وبيانات الدفع دلوقتي؟"
     }
+  ],
+  "programmes": [
+    {
+      "slug": "cphq-preparation",
+      "name": "CPHQ Preparation — تحضير CPHQ",
+      "subtitle": "برنامج تحضيري لامتحان CPHQ"
+    },
+    {
+      "slug": "healthcare-quality-management-diploma",
+      "name": "دبلومة إدارة الجودة الصحية",
+      "subtitle": "Healthcare Quality Management Diploma"
+    },
+    {
+      "slug": "cic-preparation",
+      "name": "CIC Preparation — تحضير CIC",
+      "subtitle": "برنامج تحضيري لامتحان مكافحة العدوى"
+    },
+    {
+      "slug": "infection-control-diploma",
+      "name": "دبلومة مكافحة العدوى",
+      "subtitle": "Infection Control Diploma"
+    },
+    {
+      "slug": "hospital-management-diploma",
+      "name": "دبلومة إدارة المستشفيات",
+      "subtitle": "Hospital Management Diploma"
+    },
+    {
+      "slug": "healthcare-marketing-diploma",
+      "name": "دبلومة التسويق الصحي",
+      "subtitle": "Healthcare Marketing Diploma"
+    },
+    {
+      "slug": "healthcare-hr-management-diploma",
+      "name": "دبلومة الموارد البشرية الصحية",
+      "subtitle": "Healthcare HR Management Diploma"
+    },
+    {
+      "slug": "healthcare-strategic-management-diploma",
+      "name": "دبلومة الإدارة الاستراتيجية الصحية",
+      "subtitle": "Healthcare Strategic Management Diploma"
+    }
   ]
 }

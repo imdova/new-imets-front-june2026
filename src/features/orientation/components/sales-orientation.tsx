@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import {
   ORIENTATION_LESSONS,
   SALES_ORIENTATION,
+  type ProgrammeNumbers,
   type Thread,
 } from "@/features/orientation/lib/sales-orientation";
 import { useOrientationProgress } from "@/features/orientation/hooks/use-orientation-progress";
@@ -28,6 +29,8 @@ import {
   RulesModule,
 } from "./orientation-modules";
 import { ObjectionsModule } from "./objections-module";
+import { DrillModule } from "./drill-module";
+import { ProgramsModule } from "./programs-module";
 
 /**
  * Sales orientation, as a course rather than a document.
@@ -231,7 +234,12 @@ function PathLesson({ onComplete }: { onComplete: () => void }) {
 
 /* ── course shell ────────────────────────────────────────────────────────── */
 
-export function SalesOrientation() {
+export function SalesOrientation({
+  programmes,
+}: {
+  /** Resolved from the live course records by the page — see programs-module. */
+  programmes: ProgrammeNumbers[];
+}) {
   const lessons = ORIENTATION_LESSONS;
   const progress = useOrientationProgress(lessons.length);
   const { hash, go, pin } = useLessonHash();
@@ -278,6 +286,10 @@ export function SalesOrientation() {
         onComplete={completeCurrent}
       />
     ),
+    drill: (
+      <DrillModule objections={SALES_ORIENTATION.objections} onComplete={completeCurrent} />
+    ),
+    programs: <ProgramsModule programmes={programmes} onComplete={completeCurrent} />,
     phrases: (
       <PhraseBankModule phrases={SALES_ORIENTATION.phraseBank} onComplete={completeCurrent} />
     ),

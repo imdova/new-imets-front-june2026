@@ -87,6 +87,23 @@ export interface Objection {
   next: string;
 }
 
+/** Display metadata only — the figures come from the live course record. */
+export interface ProgrammeRef {
+  slug: string;
+  name: string;
+  subtitle: string;
+}
+
+/** A programme with its live numbers resolved, ready to quote. */
+export interface ProgrammeNumbers extends ProgrammeRef {
+  lectures: number;
+  /** List fee, EGP. */
+  price: number;
+  /** Current fee after the standing discount, EGP. */
+  sale: number;
+  students: number;
+}
+
 export interface SalesOrientation {
   threads: { bad: Thread; good: Thread };
   steps: PathStep[];
@@ -102,6 +119,7 @@ export interface SalesOrientation {
     isolate: string;
   };
   objections: Objection[];
+  programmes: ProgrammeRef[];
 }
 
 export const SALES_ORIENTATION = content as SalesOrientation;
@@ -156,6 +174,22 @@ export const ORIENTATION_LESSONS = [
     heading: "منهج التعامل مع الاعتراض وبنك الاعتراضات",
     intro:
       "أربعتاشر اعتراضًا حقيقيًا على برامج IMETS، وكل واحد فيه: اللي وراه، الرد الضعيف، الرد النموذجي، والحقائق اللي تقدر تقولها من غير خوف.",
+  },
+  {
+    id: "drill",
+    short: "تدريب سريع",
+    en: "Rapid drill",
+    heading: "تدريب سريع على الاعتراضات",
+    intro:
+      "اعتراض عشوائي بيظهر قدامك. جهّز ردك بصوت عالي في أقل من ٤٥ ثانية، وبعدين قارن بالرد النموذجي وقيّم نفسك. كرّرها كل يوم قبل ما تبدأ الشيفت.",
+  },
+  {
+    id: "programs",
+    short: "أرقام البرامج",
+    en: "Programme numbers",
+    heading: "أرقام البرامج — احفظها قبل ما تتكلم في السعر",
+    intro:
+      "اختار برنامجًا وهتلاقي سعره وعدد محاضراته وتكلفة المحاضرة الواحدة وتقسيم الدفعتين. الأرقام دي هي سلاحك في اعتراض «غالي»، مش الخصم.",
   },
   {
     id: "phrases",
